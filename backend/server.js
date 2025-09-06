@@ -1,19 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
-const connectDB = require('./config/db');
 require('dotenv').config();
-
-// Import routes
-const authRoutes = require('./routes/authRoutes');
-const roomRoutes = require('./routes/roomRoutes');
-const menuRoutes = require('./routes/menuRoutes');
-const galleryRoutes = require('./routes/galleryRoutes');
-const bookingRoutes = require('./routes/bookingRoutes');
-const serviceRoutes = require('./routes/serviceRoutes');
-const packageRoutes = require('./routes/packageRoutes');
-const utilRoutes = require('./routes/utilRoutes');
-const testimonialRoutes = require('./routes/testimonials');
 
 // Initialize express
 const app = express();
@@ -42,16 +30,6 @@ app.use(cors({
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Connect to MongoDB (async for serverless)
-(async () => {
-    try {
-        await connectDB();
-        console.log('Database connected successfully');
-    } catch (error) {
-        console.error('Database connection failed:', error);
-    }
-})();
-
 // Health check route
 app.get('/', (req, res) => {
     res.status(200).json({
@@ -72,16 +50,63 @@ app.get('/api/health', (req, res) => {
     });
 });
 
-// API Routes
-app.use('/api/auth', authRoutes);
-app.use('/api/rooms', roomRoutes);
-app.use('/api/menu', menuRoutes);
-app.use('/api/gallery', galleryRoutes);
-app.use('/api/bookings', bookingRoutes);
-app.use('/api/services', serviceRoutes);
-app.use('/api/packages', packageRoutes);
-app.use('/api/testimonials', testimonialRoutes);
-app.use('/api', utilRoutes);
+// Test route to check if basic routing works
+app.get('/api/test', (req, res) => {
+    res.status(200).json({
+        message: 'API routing is working',
+        timestamp: new Date().toISOString()
+    });
+});
+
+// Load routes conditionally to avoid crashes
+try {
+    // Import database connection only when needed
+    const connectDB = require('./config/db');
+    
+    // Connect to MongoDB (async for serverless)
+    (async () => {
+        try {
+            await connectDB();
+            console.log('Database connected successfully');
+        } catch (error) {
+            console.error('Database connection failed:', error);
+        }
+    })();
+
+    // Import routes
+    const authRoutes = require('./routes/authRoutes');
+    const roomRoutes = require('./routes/roomRoutes');
+    const menuRoutes = require('./routes/menuRoutes');
+    const galleryRoutes = require('./routes/galleryRoutes');
+    const bookingRoutes = require('./routes/bookingRoutes');
+    const serviceRoutes = require('./routes/serviceRoutes');
+    const packageRoutes = require('./routes/packageRoutes');
+    const utilRoutes = require('./routes/utilRoutes');
+    const testimonialRoutes = require('./routes/testimonials');
+
+    // API Routes
+    app.use('/api/auth', authRoutes);
+    app.use('/api/rooms', roomRoutes);
+    app.use('/api/menu', menuRoutes);
+    app.use('/api/gallery', galleryRoutes);
+    app.use('/api/bookings', bookingRoutes);
+    app.use('/api/services', serviceRoutes);
+    app.use('/api/packages', packageRoutes);
+    app.use('/api/testimonials', testimonialRoutes);
+    app.use('/api', utilRoutes);
+
+} catch (error) {
+    console.error('Error loading routes or database:', error);
+    
+    // Fallback route when main routes fail
+    app.get('/api/*', (req, res) => {
+        res.status(503).json({
+            error: 'Service temporarily unavailable',
+            message: 'Database or routes are not available',
+            timestamp: new Date().toISOString()
+        });
+    });
+}
 
 // Error handling middleware
 app.use((err, req, res, next) => {
