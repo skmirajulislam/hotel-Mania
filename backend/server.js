@@ -30,8 +30,8 @@ process.on('unhandledRejection', (reason, promise) => {
 // Middleware - CORS configuration
 app.use(cors({
     origin: [
-        'http://localhost:5173', 
-        'https://hotel-mania-pqzv.vercel.app', 
+        'http://localhost:5173',
+        'https://hotel-mania-pqzv.vercel.app',
         'https://hotel-mania-two.vercel.app',
         'http://localhost:3000'
     ],
