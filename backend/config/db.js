@@ -16,7 +16,7 @@ const connectDB = async () => {
             serverSelectionTimeoutMS: 5000,
             socketTimeoutMS: 45000,
         });
-        
+
         cachedConnection = conn;
         console.log(`MongoDB Connected: ${conn.connection.host}`);
         return conn;
