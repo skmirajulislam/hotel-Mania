@@ -124,18 +124,18 @@ async function initializeApp() {
             try {
                 console.log(`Loading ${route.name}...`);
                 const routeModule = require(route.path);
-                
+
                 if (route.name === 'utilRoutes') {
                     // Utils don't always need DB
                     app.use(route.endpoint, routeModule);
                 } else {
                     app.use(route.endpoint, ensureDbConnection, routeModule);
                 }
-                
+
                 console.log(`✅ ${route.name} loaded successfully`);
             } catch (error) {
                 console.error(`❌ Error loading ${route.name}:`, error.message);
-                
+
                 // Create a fallback route for this specific endpoint
                 app.use(route.endpoint, (req, res) => {
                     res.status(503).json({
@@ -151,7 +151,7 @@ async function initializeApp() {
 
     } catch (error) {
         console.error('Error during app initialization:', error);
-        
+
         // Fallback route when everything fails
         app.get('/api/*', (req, res) => {
             res.status(503).json({
