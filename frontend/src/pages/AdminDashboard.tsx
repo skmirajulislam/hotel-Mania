@@ -17,6 +17,9 @@ import {
     DollarSign
 } from 'lucide-react';
 
+// API base URL from environment variables
+const API_BASE_URL = import.meta.env.VITE_API_ENDPOINT || 'http://localhost:5000/api';
+
 interface User {
     _id: string;
     firstName: string;
@@ -81,7 +84,7 @@ const AdminDashboard: React.FC = () => {
             // Fetch users (admin only)
             if (currentUser?.role === 'admin' || currentUser?.role === 'ceo') {
                 try {
-                    const usersResponse = await fetch('https://hotel-mania-server.vercel.app/api/auth/users', { headers });
+                    const usersResponse = await fetch(`${API_BASE_URL}/auth/users`, { headers });
                     if (usersResponse.ok) {
                         const usersData = await usersResponse.json();
                         setUsers(usersData.data || []);
@@ -93,7 +96,7 @@ const AdminDashboard: React.FC = () => {
 
             // Fetch bookings
             try {
-                const bookingsResponse = await fetch('https://hotel-mania-server.vercel.app/api/bookings', { headers });
+                const bookingsResponse = await fetch(`${API_BASE_URL}/bookings`, { headers });
                 if (bookingsResponse.ok) {
                     const bookingsData = await bookingsResponse.json();
                     setBookings(bookingsData.data || []);
@@ -104,7 +107,7 @@ const AdminDashboard: React.FC = () => {
 
             // Fetch stats
             try {
-                const statsResponse = await fetch('https://hotel-mania-server.vercel.app/api/bookings/stats', { headers });
+                const statsResponse = await fetch(`${API_BASE_URL}/bookings/stats`, { headers });
                 if (statsResponse.ok) {
                     const statsData = await statsResponse.json();
                     setStats(statsData.data || {});

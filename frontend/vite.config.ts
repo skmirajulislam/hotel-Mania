@@ -10,7 +10,7 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': {
-        target: 'https://hotel-mania-server.vercel.app', // Updated to match backend port in .env
+        target: 'http://localhost:5000', // Local development proxy
         changeOrigin: true,
       },
     },

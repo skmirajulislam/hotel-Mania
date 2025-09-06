@@ -1,8 +1,8 @@
 import axios from 'axios';
 
-// Create axios instance with base URL
+// Create axios instance with base URL from environment variables
 const api = axios.create({
-    baseURL: 'https://hotel-mania-server.vercel.app/api',
+    baseURL: import.meta.env.VITE_API_ENDPOINT || 'http://localhost:5000/api',
     headers: {
         'Content-Type': 'application/json'
     }

@@ -20,6 +20,7 @@ app.use(cors({
     origin: [
         'http://localhost:5173',
         'https://hotel-mania-pqzv.vercel.app',
+        'https://hotel-mania-two.vercel.app',
         'http://localhost:3000'
     ],
     credentials: true,
@@ -53,25 +54,25 @@ app.get('/api/health', (req, res) => {
 const ensureDbConnection = async (req, res, next) => {
     try {
         const mongoose = require('mongoose');
-        
+
         // Check if connection is ready
         if (mongoose.connection.readyState === 1) {
             return next();
         }
-        
+
         // If not connected, try to reconnect
         if (mongoose.connection.readyState === 0) {
             const connectDB = require('./config/db');
             await connectDB();
             return next();
         }
-        
+
         // Connection is in progress, wait a bit
         if (mongoose.connection.readyState === 2) {
             await new Promise(resolve => setTimeout(resolve, 1000));
             return next();
         }
-        
+
         // Connection failed
         return res.status(503).json({
             error: 'Database connection not available',
@@ -148,7 +149,7 @@ async function initializeApp() {
 
     } catch (error) {
         console.error('Error loading routes or database:', error);
-        
+
         // Fallback route when main routes fail
         app.get('/api/*', (req, res) => {
             res.status(503).json({
