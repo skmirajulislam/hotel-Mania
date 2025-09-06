@@ -18,9 +18,23 @@ const testimonialRoutes = require('./routes/testimonials');
 // Initialize express
 const app = express();
 
+// Basic error handling for serverless
+process.on('uncaughtException', (err) => {
+    console.error('Uncaught Exception:', err);
+});
+
+process.on('unhandledRejection', (reason, promise) => {
+    console.error('Unhandled Rejection at:', promise, 'reason:', reason);
+});
+
 // Middleware - CORS configuration
 app.use(cors({
-    origin: ['http://localhost:5173', 'https://hotel-mania-pqzv.vercel.app', 'http://localhost:3000'],
+    origin: [
+        'http://localhost:5173', 
+        'https://hotel-mania-pqzv.vercel.app', 
+        'https://hotel-mania-two.vercel.app',
+        'http://localhost:3000'
+    ],
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization']
@@ -28,8 +42,35 @@ app.use(cors({
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Connect to MongoDB
-connectDB();
+// Connect to MongoDB (async for serverless)
+(async () => {
+    try {
+        await connectDB();
+        console.log('Database connected successfully');
+    } catch (error) {
+        console.error('Database connection failed:', error);
+    }
+})();
+
+// Health check route
+app.get('/', (req, res) => {
+    res.status(200).json({
+        status: 'success',
+        message: 'Server is working and healthy',
+        timestamp: new Date().toISOString(),
+        environment: process.env.NODE_ENV || 'development'
+    });
+});
+
+// Simple test route without database
+app.get('/api/health', (req, res) => {
+    res.status(200).json({
+        status: 'healthy',
+        service: 'Hotel API',
+        timestamp: new Date().toISOString(),
+        version: '1.0.0'
+    });
+});
 
 // API Routes
 app.use('/api/auth', authRoutes);
@@ -41,15 +82,6 @@ app.use('/api/services', serviceRoutes);
 app.use('/api/packages', packageRoutes);
 app.use('/api/testimonials', testimonialRoutes);
 app.use('/api', utilRoutes);
-
-// Serve static files in production
-if (process.env.NODE_ENV === 'production') {
-    app.use(express.static(path.join(__dirname, '../dist')));
-
-    app.get('*', (req, res) => {
-        res.sendFile(path.join(__dirname, '../dist', 'index.html'));
-    });
-}
 
 // Error handling middleware
 app.use((err, req, res, next) => {
