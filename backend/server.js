@@ -62,7 +62,7 @@ app.get('/api/test', (req, res) => {
 try {
     // Import database connection only when needed
     const connectDB = require('./config/db');
-
+    
     // Connect to MongoDB (async for serverless)
     (async () => {
         try {
@@ -73,37 +73,54 @@ try {
         }
     })();
 
-    // Import routes
+    // Import routes one by one to identify issues
+    console.log('Loading authRoutes...');
     const authRoutes = require('./routes/authRoutes');
-    const roomRoutes = require('./routes/roomRoutes');
-    const menuRoutes = require('./routes/menuRoutes');
-    const galleryRoutes = require('./routes/galleryRoutes');
-    const bookingRoutes = require('./routes/bookingRoutes');
-    const serviceRoutes = require('./routes/serviceRoutes');
-    const packageRoutes = require('./routes/packageRoutes');
-    const utilRoutes = require('./routes/utilRoutes');
-    const testimonialRoutes = require('./routes/testimonials');
-
-    // API Routes
     app.use('/api/auth', authRoutes);
+
+    console.log('Loading roomRoutes...');
+    const roomRoutes = require('./routes/roomRoutes');
     app.use('/api/rooms', roomRoutes);
+
+    console.log('Loading menuRoutes...');
+    const menuRoutes = require('./routes/menuRoutes');
     app.use('/api/menu', menuRoutes);
+
+    console.log('Loading galleryRoutes...');
+    const galleryRoutes = require('./routes/galleryRoutes');
     app.use('/api/gallery', galleryRoutes);
-    app.use('/api/bookings', bookingRoutes);
+
+    console.log('Loading serviceRoutes...');
+    const serviceRoutes = require('./routes/serviceRoutes');
     app.use('/api/services', serviceRoutes);
+
+    console.log('Loading packageRoutes...');
+    const packageRoutes = require('./routes/packageRoutes');
     app.use('/api/packages', packageRoutes);
+
+    console.log('Loading testimonialRoutes...');
+    const testimonialRoutes = require('./routes/testimonials');
     app.use('/api/testimonials', testimonialRoutes);
+
+    console.log('Loading utilRoutes...');
+    const utilRoutes = require('./routes/utilRoutes');
     app.use('/api', utilRoutes);
+
+    // Load booking routes last as they seem to have the most complex patterns
+    console.log('Loading bookingRoutes...');
+    const bookingRoutes = require('./routes/bookingRoutes');
+    app.use('/api/bookings', bookingRoutes);
 
 } catch (error) {
     console.error('Error loading routes or database:', error);
-
+    
     // Fallback route when main routes fail
     app.get('/api/*', (req, res) => {
         res.status(503).json({
             error: 'Service temporarily unavailable',
             message: 'Database or routes are not available',
-            timestamp: new Date().toISOString()
+            timestamp: new Date().toISOString(),
+            route: req.path
         });
     });
 }

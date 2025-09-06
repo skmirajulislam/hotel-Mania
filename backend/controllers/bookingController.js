@@ -3,7 +3,12 @@ const Room = require('../models/Room');
 const Package = require('../models/Package');
 const Service = require('../models/Service');
 const { createPaymentIntent } = require('../services/paymentService');
-const { v4: uuidv4 } = require('uuid');
+const crypto = require('crypto');
+
+// Generate UUID using crypto (Node.js built-in)
+const generateUUID = () => {
+    return crypto.randomUUID();
+};
 
 // Create new booking
 const createBooking = async (req, res) => {
@@ -340,7 +345,7 @@ const addFoodOrder = async (req, res) => {
         const totalAmount = items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
 
         const foodOrder = {
-            orderId: uuidv4(),
+            orderId: generateUUID(),
             items,
             orderType,
             deliveryDate,
@@ -414,7 +419,7 @@ const createServiceRequest = async (req, res) => {
         }
 
         const serviceRequest = {
-            requestId: uuidv4(),
+            requestId: generateUUID(),
             type,
             priority: priority || 'medium',
             description
