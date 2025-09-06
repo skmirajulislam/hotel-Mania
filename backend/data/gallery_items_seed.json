@@ -1,0 +1,110 @@
+[
+    {
+        "type": "image",
+        "category": "exterior",
+        "url": "https://images.pexels.com/photos/258154/pexels-photo-258154.jpeg?auto=compress&cs=tinysrgb&w=800",
+        "caption": "Grand Hotel Exterior - Majestic Architecture at Golden Hour"
+    },
+    {
+        "type": "image",
+        "category": "exterior",
+        "url": "https://images.pexels.com/photos/1134166/pexels-photo-1134166.jpeg?auto=compress&cs=tinysrgb&w=800",
+        "caption": "Hotel Entrance - Elegant Reception and Valet Services"
+    },
+    {
+        "type": "image",
+        "category": "exterior",
+        "url": "https://images.pexels.com/photos/2373201/pexels-photo-2373201.jpeg?auto=compress&cs=tinysrgb&w=800",
+        "caption": "Hotel Gardens - Beautifully Landscaped Outdoor Spaces"
+    },
+    {
+        "type": "image",
+        "category": "rooms",
+        "url": "https://images.pexels.com/photos/271624/pexels-photo-271624.jpeg?auto=compress&cs=tinysrgb&w=800",
+        "caption": "Luxury Suite - Premium Accommodations with City Views"
+    },
+    {
+        "type": "image",
+        "category": "rooms",
+        "url": "https://images.pexels.com/photos/1457847/pexels-photo-1457847.jpeg?auto=compress&cs=tinysrgb&w=800",
+        "caption": "Presidential Suite - Ultimate Luxury and Comfort"
+    },
+    {
+        "type": "image",
+        "category": "rooms",
+        "url": "https://images.pexels.com/photos/164595/pexels-photo-164595.jpeg?auto=compress&cs=tinysrgb&w=800",
+        "caption": "Standard Room - Modern Amenities and Cozy Atmosphere"
+    },
+    {
+        "type": "image",
+        "category": "rooms",
+        "url": "https://images.pexels.com/photos/1454806/pexels-photo-1454806.jpeg?auto=compress&cs=tinysrgb&w=800",
+        "caption": "Premium Room - Sophisticated Design and Enhanced Comfort"
+    },
+    {
+        "type": "image",
+        "category": "dining",
+        "url": "https://images.pexels.com/photos/776538/pexels-photo-776538.jpeg?auto=compress&cs=tinysrgb&w=800",
+        "caption": "Main Restaurant - Fine Dining Experience"
+    },
+    {
+        "type": "image",
+        "category": "dining",
+        "url": "https://images.pexels.com/photos/2253643/pexels-photo-2253643.jpeg?auto=compress&cs=tinysrgb&w=800",
+        "caption": "Rooftop Bar - Cocktails with Panoramic Views"
+    },
+    {
+        "type": "image",
+        "category": "dining",
+        "url": "https://images.pexels.com/photos/914388/pexels-photo-914388.jpeg?auto=compress&cs=tinysrgb&w=800",
+        "caption": "Café Lounge - Casual Dining and Coffee Service"
+    },
+    {
+        "type": "image",
+        "category": "amenities",
+        "url": "https://images.pexels.com/photos/3865722/pexels-photo-3865722.jpeg?auto=compress&cs=tinysrgb&w=800",
+        "caption": "Spa & Wellness Center - Rejuvenating Treatments"
+    },
+    {
+        "type": "image",
+        "category": "amenities",
+        "url": "https://images.pexels.com/photos/1954524/pexels-photo-1954524.jpeg?auto=compress&cs=tinysrgb&w=800",
+        "caption": "Fitness Center - State-of-the-Art Equipment"
+    },
+    {
+        "type": "image",
+        "category": "amenities",
+        "url": "https://images.pexels.com/photos/221457/pexels-photo-221457.jpeg?auto=compress&cs=tinysrgb&w=800",
+        "caption": "Swimming Pool - Outdoor Recreation and Relaxation"
+    },
+    {
+        "type": "image",
+        "category": "amenities",
+        "url": "https://images.pexels.com/photos/2506988/pexels-photo-2506988.jpeg?auto=compress&cs=tinysrgb&w=800",
+        "caption": "Business Center - Professional Meeting Spaces"
+    },
+    {
+        "type": "image",
+        "category": "events",
+        "url": "https://images.pexels.com/photos/2306281/pexels-photo-2306281.jpeg?auto=compress&cs=tinysrgb&w=800",
+        "caption": "Grand Ballroom - Elegant Event and Wedding Venue"
+    },
+    {
+        "type": "image",
+        "category": "events",
+        "url": "https://images.pexels.com/photos/2306276/pexels-photo-2306276.jpeg?auto=compress&cs=tinysrgb&w=800",
+        "caption": "Conference Room - Professional Business Meetings"
+    },
+    {
+        "type": "image",
+        "category": "lobby",
+        "url": "https://images.pexels.com/photos/1134166/pexels-photo-1134166.jpeg?auto=compress&cs=tinysrgb&w=800",
+        "caption": "Reception Lobby - Luxurious Welcome Area"
+    },
+    {
+        "type": "image",
+        "category": "lobby",
+        "url": "https://images.pexels.com/photos/1134176/pexels-photo-1134176.jpeg?auto=compress&cs=tinysrgb&w=800",
+        "caption": "Concierge Desk - Personalized Guest Services"
+    }
+]

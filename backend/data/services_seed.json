@@ -1,0 +1,425 @@
+[
+    {
+        "name": "Swedish Relaxation Massage",
+        "description": "Classic full-body massage using Swedish techniques to promote relaxation and reduce muscle tension",
+        "category": "spa",
+        "price": 450,
+        "duration": {
+            "value": 60,
+            "unit": "minutes"
+        },
+        "availability": {
+            "days": [
+                "monday",
+                "tuesday",
+                "wednesday",
+                "thursday",
+                "friday",
+                "saturday",
+                "sunday"
+            ],
+            "timeSlots": [
+                {
+                    "startTime": "09:00",
+                    "endTime": "10:00",
+                    "maxBookings": 2
+                },
+                {
+                    "startTime": "11:00",
+                    "endTime": "12:00",
+                    "maxBookings": 2
+                },
+                {
+                    "startTime": "14:00",
+                    "endTime": "15:00",
+                    "maxBookings": 2
+                },
+                {
+                    "startTime": "16:00",
+                    "endTime": "17:00",
+                    "maxBookings": 2
+                }
+            ]
+        },
+        "images": [
+            "https://images.pexels.com/photos/3865722/pexels-photo-3865722.jpeg?auto=compress&cs=tinysrgb&w=400"
+        ],
+        "isActive": true,
+        "staffRequired": true,
+        "maxCapacity": 2,
+        "requirements": [
+            "Advance booking required",
+            "Arrive 15 minutes early"
+        ]
+    },
+    {
+        "name": "Deep Tissue Massage",
+        "description": "Therapeutic massage targeting deep muscle layers to relieve chronic tension and pain",
+        "category": "spa",
+        "price": 550,
+        "duration": {
+            "value": 75,
+            "unit": "minutes"
+        },
+        "availability": {
+            "days": [
+                "tuesday",
+                "wednesday",
+                "thursday",
+                "friday",
+                "saturday"
+            ],
+            "timeSlots": [
+                {
+                    "startTime": "10:00",
+                    "endTime": "11:15",
+                    "maxBookings": 1
+                },
+                {
+                    "startTime": "15:00",
+                    "endTime": "16:15",
+                    "maxBookings": 1
+                }
+            ]
+        },
+        "images": [
+            "https://images.pexels.com/photos/3865722/pexels-photo-3865722.jpeg?auto=compress&cs=tinysrgb&w=400"
+        ],
+        "isActive": true,
+        "staffRequired": true,
+        "maxCapacity": 1,
+        "requirements": [
+            "Medical clearance may be required",
+            "Not suitable for pregnant guests"
+        ]
+    },
+    {
+        "name": "Personal Training Session",
+        "description": "One-on-one fitness training with certified personal trainer, customized to your fitness goals",
+        "category": "gym",
+        "price": 320,
+        "duration": {
+            "value": 45,
+            "unit": "minutes"
+        },
+        "availability": {
+            "days": [
+                "monday",
+                "tuesday",
+                "wednesday",
+                "thursday",
+                "friday",
+                "saturday"
+            ],
+            "timeSlots": [
+                {
+                    "startTime": "06:00",
+                    "endTime": "06:45",
+                    "maxBookings": 3
+                },
+                {
+                    "startTime": "07:00",
+                    "endTime": "07:45",
+                    "maxBookings": 3
+                },
+                {
+                    "startTime": "18:00",
+                    "endTime": "18:45",
+                    "maxBookings": 3
+                },
+                {
+                    "startTime": "19:00",
+                    "endTime": "19:45",
+                    "maxBookings": 3
+                }
+            ]
+        },
+        "images": [
+            "https://images.pexels.com/photos/1954524/pexels-photo-1954524.jpeg?auto=compress&cs=tinysrgb&w=400"
+        ],
+        "isActive": true,
+        "staffRequired": true,
+        "maxCapacity": 1,
+        "requirements": [
+            "Fitness assessment required",
+            "Appropriate workout attire"
+        ]
+    },
+    {
+        "name": "Express Laundry Service",
+        "description": "Same-day laundry and dry cleaning service for hotel guests",
+        "category": "laundry",
+        "price": 150,
+        "duration": {
+            "value": 4,
+            "unit": "hours"
+        },
+        "availability": {
+            "days": [
+                "monday",
+                "tuesday",
+                "wednesday",
+                "thursday",
+                "friday",
+                "saturday"
+            ],
+            "timeSlots": [
+                {
+                    "startTime": "08:00",
+                    "endTime": "12:00",
+                    "maxBookings": 10
+                },
+                {
+                    "startTime": "13:00",
+                    "endTime": "17:00",
+                    "maxBookings": 10
+                }
+            ]
+        },
+        "images": [],
+        "isActive": true,
+        "staffRequired": false,
+        "maxCapacity": 20,
+        "requirements": [
+            "Items must be collected by 10 PM",
+            "Special care items extra charge"
+        ]
+    },
+    {
+        "name": "Airport Transfer Service",
+        "description": "Luxury vehicle transfer to and from airport with professional chauffeur",
+        "category": "transport",
+        "price": 280,
+        "duration": {
+            "value": 1,
+            "unit": "hours"
+        },
+        "availability": {
+            "days": [
+                "monday",
+                "tuesday",
+                "wednesday",
+                "thursday",
+                "friday",
+                "saturday",
+                "sunday"
+            ],
+            "timeSlots": [
+                {
+                    "startTime": "00:00",
+                    "endTime": "23:59",
+                    "maxBookings": 5
+                }
+            ]
+        },
+        "images": [],
+        "isActive": true,
+        "staffRequired": true,
+        "maxCapacity": 4,
+        "requirements": [
+            "24-hour advance booking preferred",
+            "Flight details required"
+        ]
+    },
+    {
+        "name": "City Tour Package",
+        "description": "Guided tour of local attractions and landmarks with experienced tour guide",
+        "category": "tour",
+        "price": 480,
+        "duration": {
+            "value": 4,
+            "unit": "hours"
+        },
+        "availability": {
+            "days": [
+                "monday",
+                "tuesday",
+                "wednesday",
+                "thursday",
+                "friday",
+                "saturday",
+                "sunday"
+            ],
+            "timeSlots": [
+                {
+                    "startTime": "09:00",
+                    "endTime": "13:00",
+                    "maxBookings": 1
+                },
+                {
+                    "startTime": "14:00",
+                    "endTime": "18:00",
+                    "maxBookings": 1
+                }
+            ]
+        },
+        "images": [],
+        "isActive": true,
+        "staffRequired": true,
+        "maxCapacity": 8,
+        "requirements": [
+            "Weather dependent",
+            "Comfortable walking shoes recommended"
+        ]
+    },
+    {
+        "name": "Private Dining Experience",
+        "description": "Exclusive in-room dining with personal chef and customized menu",
+        "category": "dining",
+        "price": 850,
+        "duration": {
+            "value": 2,
+            "unit": "hours"
+        },
+        "availability": {
+            "days": [
+                "tuesday",
+                "wednesday",
+                "thursday",
+                "friday",
+                "saturday",
+                "sunday"
+            ],
+            "timeSlots": [
+                {
+                    "startTime": "18:00",
+                    "endTime": "20:00",
+                    "maxBookings": 2
+                },
+                {
+                    "startTime": "20:30",
+                    "endTime": "22:30",
+                    "maxBookings": 2
+                }
+            ]
+        },
+        "images": [
+            "https://images.pexels.com/photos/776538/pexels-photo-776538.jpeg?auto=compress&cs=tinysrgb&w=400"
+        ],
+        "isActive": true,
+        "staffRequired": true,
+        "maxCapacity": 6,
+        "requirements": [
+            "48-hour advance booking",
+            "Dietary restrictions must be specified",
+            "Premium suites only"
+        ]
+    },
+    {
+        "name": "Couples Spa Package",
+        "description": "Romantic spa experience for two with side-by-side treatments and champagne",
+        "category": "spa",
+        "price": 980,
+        "duration": {
+            "value": 90,
+            "unit": "minutes"
+        },
+        "availability": {
+            "days": [
+                "friday",
+                "saturday",
+                "sunday"
+            ],
+            "timeSlots": [
+                {
+                    "startTime": "10:00",
+                    "endTime": "11:30",
+                    "maxBookings": 1
+                },
+                {
+                    "startTime": "14:00",
+                    "endTime": "15:30",
+                    "maxBookings": 1
+                }
+            ]
+        },
+        "images": [
+            "https://images.pexels.com/photos/3865722/pexels-photo-3865722.jpeg?auto=compress&cs=tinysrgb&w=400"
+        ],
+        "isActive": true,
+        "staffRequired": true,
+        "maxCapacity": 2,
+        "requirements": [
+            "Couples only",
+            "Advance booking required",
+            "Romantic setup included"
+        ]
+    },
+    {
+        "name": "Valet Parking Service",
+        "description": "Professional valet parking and car care service for hotel guests",
+        "category": "other",
+        "price": 80,
+        "duration": {
+            "value": 24,
+            "unit": "hours"
+        },
+        "availability": {
+            "days": [
+                "monday",
+                "tuesday",
+                "wednesday",
+                "thursday",
+                "friday",
+                "saturday",
+                "sunday"
+            ],
+            "timeSlots": [
+                {
+                    "startTime": "00:00",
+                    "endTime": "23:59",
+                    "maxBookings": 50
+                }
+            ]
+        },
+        "images": [],
+        "isActive": true,
+        "staffRequired": true,
+        "maxCapacity": 50,
+        "requirements": [
+            "Valid driver's license",
+            "Insurance required",
+            "No liability for personal items"
+        ]
+    },
+    {
+        "name": "Business Meeting Room",
+        "description": "Fully equipped meeting room with AV equipment and refreshment service",
+        "category": "other",
+        "price": 300,
+        "duration": {
+            "value": 4,
+            "unit": "hours"
+        },
+        "availability": {
+            "days": [
+                "monday",
+                "tuesday",
+                "wednesday",
+                "thursday",
+                "friday"
+            ],
+            "timeSlots": [
+                {
+                    "startTime": "08:00",
+                    "endTime": "12:00",
+                    "maxBookings": 3
+                },
+                {
+                    "startTime": "13:00",
+                    "endTime": "17:00",
+                    "maxBookings": 3
+                }
+            ]
+        },
+        "images": [],
+        "isActive": true,
+        "staffRequired": false,
+        "maxCapacity": 12,
+        "requirements": [
+            "Business guests only",
+            "Technical support available",
+            "Catering can be arranged"
+        ]
+    }
+]

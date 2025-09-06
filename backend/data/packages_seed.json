@@ -1,0 +1,302 @@
+[
+    {
+        "name": "Luxury Spa Package",
+        "description": "Complete wellness experience with spa treatments, massage therapy, and relaxation amenities",
+        "type": "wellness",
+        "price": 1200,
+        "discountPercentage": 15,
+        "duration": {
+            "nights": 2,
+            "days": 3
+        },
+        "includes": {
+            "meals": {
+                "breakfast": true,
+                "lunch": false,
+                "dinner": true,
+                "snacks": true
+            },
+            "services": [
+                {
+                    "serviceName": "Full Body Massage",
+                    "quantity": 1,
+                    "included": true
+                },
+                {
+                    "serviceName": "Facial Treatment",
+                    "quantity": 1,
+                    "included": true
+                },
+                {
+                    "serviceName": "Spa Access",
+                    "quantity": 2,
+                    "included": true
+                }
+            ],
+            "amenities": [
+                "Spa Robe",
+                "Wellness Consultation",
+                "Yoga Classes"
+            ],
+            "specialFeatures": [
+                "Private Spa Suite",
+                "Aromatherapy Session",
+                "Meditation Guide"
+            ]
+        },
+        "validityPeriod": {
+            "startDate": "2024-01-01T00:00:00.000Z",
+            "endDate": "2024-12-31T23:59:59.000Z"
+        },
+        "bookingWindow": {
+            "advanceBookingDays": 30,
+            "lastMinuteBookingHours": 24
+        },
+        "maxGuests": 2,
+        "isActive": true,
+        "terms": [
+            "Non-refundable after 48 hours",
+            "Valid for 12 months from purchase",
+            "Subject to availability"
+        ]
+    },
+    {
+        "name": "Romantic Honeymoon Getaway",
+        "description": "Perfect romantic escape with luxury accommodations, couples treatments, and intimate dining",
+        "type": "honeymoon",
+        "price": 2500,
+        "discountPercentage": 20,
+        "duration": {
+            "nights": 3,
+            "days": 4
+        },
+        "includes": {
+            "meals": {
+                "breakfast": true,
+                "lunch": true,
+                "dinner": true,
+                "snacks": true
+            },
+            "services": [
+                {
+                    "serviceName": "Couples Massage",
+                    "quantity": 1,
+                    "included": true
+                },
+                {
+                    "serviceName": "Private Dinner Service",
+                    "quantity": 1,
+                    "included": true
+                },
+                {
+                    "serviceName": "Limousine Transfer",
+                    "quantity": 2,
+                    "included": true
+                }
+            ],
+            "amenities": [
+                "Champagne Welcome",
+                "Rose Petals",
+                "Chocolate Treats"
+            ],
+            "specialFeatures": [
+                "Private Balcony",
+                "Late Checkout",
+                "Personalized Service"
+            ]
+        },
+        "validityPeriod": {
+            "startDate": "2024-01-01T00:00:00.000Z",
+            "endDate": "2024-12-31T23:59:59.000Z"
+        },
+        "bookingWindow": {
+            "advanceBookingDays": 60,
+            "lastMinuteBookingHours": 48
+        },
+        "maxGuests": 2,
+        "isActive": true,
+        "terms": [
+            "Romantic décor included",
+            "Minimum 3-night stay",
+            "Valid for couples only"
+        ]
+    },
+    {
+        "name": "Family Adventure Package",
+        "description": "Fun-filled family experience with activities, meals, and entertainment for all ages",
+        "type": "family",
+        "price": 1800,
+        "discountPercentage": 10,
+        "duration": {
+            "nights": 2,
+            "days": 3
+        },
+        "includes": {
+            "meals": {
+                "breakfast": true,
+                "lunch": true,
+                "dinner": false,
+                "snacks": true
+            },
+            "services": [
+                {
+                    "serviceName": "Kids Club Access",
+                    "quantity": 3,
+                    "included": true
+                },
+                {
+                    "serviceName": "Family Pool Access",
+                    "quantity": 1,
+                    "included": true
+                },
+                {
+                    "serviceName": "Tour Guide Service",
+                    "quantity": 1,
+                    "included": true
+                }
+            ],
+            "amenities": [
+                "Welcome Gifts for Kids",
+                "Game Room Access",
+                "Playground Access"
+            ],
+            "specialFeatures": [
+                "Family Photos",
+                "Kids Menu",
+                "Babysitting Service"
+            ]
+        },
+        "validityPeriod": {
+            "startDate": "2024-01-01T00:00:00.000Z",
+            "endDate": "2024-12-31T23:59:59.000Z"
+        },
+        "bookingWindow": {
+            "advanceBookingDays": 21,
+            "lastMinuteBookingHours": 12
+        },
+        "maxGuests": 6,
+        "isActive": true,
+        "terms": [
+            "Children under 12 stay free",
+            "Family-friendly activities included",
+            "Suitable for ages 0-17"
+        ]
+    },
+    {
+        "name": "Business Executive Package",
+        "description": "Professional package designed for business travelers with meeting facilities and concierge services",
+        "type": "business",
+        "price": 950,
+        "discountPercentage": 5,
+        "duration": {
+            "nights": 1,
+            "days": 2
+        },
+        "includes": {
+            "meals": {
+                "breakfast": true,
+                "lunch": true,
+                "dinner": false,
+                "snacks": false
+            },
+            "services": [
+                {
+                    "serviceName": "Business Center Access",
+                    "quantity": 1,
+                    "included": true
+                },
+                {
+                    "serviceName": "Airport Transfer",
+                    "quantity": 2,
+                    "included": true
+                },
+                {
+                    "serviceName": "Meeting Room (4 hours)",
+                    "quantity": 1,
+                    "included": true
+                }
+            ],
+            "amenities": [
+                "High-Speed Internet",
+                "Printer Access",
+                "Meeting Supplies"
+            ],
+            "specialFeatures": [
+                "Express Check-in/out",
+                "Business Lounge Access",
+                "Late Checkout"
+            ]
+        },
+        "validityPeriod": {
+            "startDate": "2024-01-01T00:00:00.000Z",
+            "endDate": "2024-12-31T23:59:59.000Z"
+        },
+        "bookingWindow": {
+            "advanceBookingDays": 14,
+            "lastMinuteBookingHours": 6
+        },
+        "maxGuests": 2,
+        "isActive": true,
+        "terms": [
+            "Business facilities included",
+            "Corporate rates available",
+            "Professional amenities"
+        ]
+    },
+    {
+        "name": "Weekend Getaway Special",
+        "description": "Perfect weekend escape with leisure activities, dining, and relaxation options",
+        "type": "weekend",
+        "price": 800,
+        "discountPercentage": 12,
+        "duration": {
+            "nights": 2,
+            "days": 2
+        },
+        "includes": {
+            "meals": {
+                "breakfast": true,
+                "lunch": false,
+                "dinner": true,
+                "snacks": false
+            },
+            "services": [
+                {
+                    "serviceName": "Pool Access",
+                    "quantity": 1,
+                    "included": true
+                },
+                {
+                    "serviceName": "Gym Access",
+                    "quantity": 1,
+                    "included": true
+                }
+            ],
+            "amenities": [
+                "Welcome Drink",
+                "Late Checkout",
+                "Fitness Center"
+            ],
+            "specialFeatures": [
+                "Weekend Activities",
+                "Complimentary Upgrades",
+                "Leisure Facilities"
+            ]
+        },
+        "validityPeriod": {
+            "startDate": "2024-01-01T00:00:00.000Z",
+            "endDate": "2024-12-31T23:59:59.000Z"
+        },
+        "bookingWindow": {
+            "advanceBookingDays": 7,
+            "lastMinuteBookingHours": 24
+        },
+        "maxGuests": 4,
+        "isActive": true,
+        "terms": [
+            "Weekend stays only",
+            "Friday-Sunday availability",
+            "Leisure activities included"
+        ]
+    }
+]
