@@ -62,7 +62,7 @@ app.get('/api/test', (req, res) => {
 try {
     // Import database connection only when needed
     const connectDB = require('./config/db');
-    
+
     // Connect to MongoDB (async for serverless)
     (async () => {
         try {
@@ -113,7 +113,7 @@ try {
 
 } catch (error) {
     console.error('Error loading routes or database:', error);
-    
+
     // Fallback route when main routes fail
     app.get('/api/*', (req, res) => {
         res.status(503).json({
