@@ -11,10 +11,14 @@ const connectDB = async () => {
 
     try {
         const conn = await mongoose.connect(process.env.MONGODB_URI, {
-            bufferCommands: false,
+            // Remove bufferCommands: false to prevent immediate query failures
             maxPoolSize: 10,
-            serverSelectionTimeoutMS: 5000,
+            serverSelectionTimeoutMS: 10000, // Increased timeout
             socketTimeoutMS: 45000,
+            connectTimeoutMS: 10000,
+            // Add retry configuration
+            retryWrites: true,
+            retryReads: true
         });
 
         cachedConnection = conn;

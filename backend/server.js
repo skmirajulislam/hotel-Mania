@@ -20,7 +20,6 @@ app.use(cors({
     origin: [
         'http://localhost:5173',
         'https://hotel-mania-pqzv.vercel.app',
-        'https://hotel-mania-two.vercel.app',
         'http://localhost:3000'
     ],
     credentials: true,
@@ -50,6 +49,44 @@ app.get('/api/health', (req, res) => {
     });
 });
 
+// Database connection middleware for API routes
+const ensureDbConnection = async (req, res, next) => {
+    try {
+        const mongoose = require('mongoose');
+        
+        // Check if connection is ready
+        if (mongoose.connection.readyState === 1) {
+            return next();
+        }
+        
+        // If not connected, try to reconnect
+        if (mongoose.connection.readyState === 0) {
+            const connectDB = require('./config/db');
+            await connectDB();
+            return next();
+        }
+        
+        // Connection is in progress, wait a bit
+        if (mongoose.connection.readyState === 2) {
+            await new Promise(resolve => setTimeout(resolve, 1000));
+            return next();
+        }
+        
+        // Connection failed
+        return res.status(503).json({
+            error: 'Database connection not available',
+            timestamp: new Date().toISOString()
+        });
+    } catch (error) {
+        console.error('Database connection middleware error:', error);
+        return res.status(503).json({
+            error: 'Database connection failed',
+            message: error.message,
+            timestamp: new Date().toISOString()
+        });
+    }
+};
+
 // Test route to check if basic routing works
 app.get('/api/test', (req, res) => {
     res.status(200).json({
@@ -59,73 +96,74 @@ app.get('/api/test', (req, res) => {
 });
 
 // Load routes conditionally to avoid crashes
-try {
-    // Import database connection only when needed
-    const connectDB = require('./config/db');
+async function initializeApp() {
+    try {
+        // Import database connection only when needed
+        const connectDB = require('./config/db');
 
-    // Connect to MongoDB (async for serverless)
-    (async () => {
-        try {
-            await connectDB();
-            console.log('Database connected successfully');
-        } catch (error) {
-            console.error('Database connection failed:', error);
-        }
-    })();
+        // Connect to MongoDB first (critical for serverless)
+        console.log('Connecting to database...');
+        await connectDB();
+        console.log('Database connected successfully');
 
-    // Import routes one by one to identify issues
-    console.log('Loading authRoutes...');
-    const authRoutes = require('./routes/authRoutes');
-    app.use('/api/auth', authRoutes);
+        // Only load routes after database is connected
+        console.log('Loading authRoutes...');
+        const authRoutes = require('./routes/authRoutes');
+        app.use('/api/auth', ensureDbConnection, authRoutes);
 
-    console.log('Loading roomRoutes...');
-    const roomRoutes = require('./routes/roomRoutes');
-    app.use('/api/rooms', roomRoutes);
+        console.log('Loading roomRoutes...');
+        const roomRoutes = require('./routes/roomRoutes');
+        app.use('/api/rooms', ensureDbConnection, roomRoutes);
 
-    console.log('Loading menuRoutes...');
-    const menuRoutes = require('./routes/menuRoutes');
-    app.use('/api/menu', menuRoutes);
+        console.log('Loading menuRoutes...');
+        const menuRoutes = require('./routes/menuRoutes');
+        app.use('/api/menu', ensureDbConnection, menuRoutes);
 
-    console.log('Loading galleryRoutes...');
-    const galleryRoutes = require('./routes/galleryRoutes');
-    app.use('/api/gallery', galleryRoutes);
+        console.log('Loading galleryRoutes...');
+        const galleryRoutes = require('./routes/galleryRoutes');
+        app.use('/api/gallery', ensureDbConnection, galleryRoutes);
 
-    console.log('Loading serviceRoutes...');
-    const serviceRoutes = require('./routes/serviceRoutes');
-    app.use('/api/services', serviceRoutes);
+        console.log('Loading serviceRoutes...');
+        const serviceRoutes = require('./routes/serviceRoutes');
+        app.use('/api/services', ensureDbConnection, serviceRoutes);
 
-    console.log('Loading packageRoutes...');
-    const packageRoutes = require('./routes/packageRoutes');
-    app.use('/api/packages', packageRoutes);
+        console.log('Loading packageRoutes...');
+        const packageRoutes = require('./routes/packageRoutes');
+        app.use('/api/packages', ensureDbConnection, packageRoutes);
 
-    console.log('Loading testimonialRoutes...');
-    const testimonialRoutes = require('./routes/testimonials');
-    app.use('/api/testimonials', testimonialRoutes);
+        console.log('Loading testimonialRoutes...');
+        const testimonialRoutes = require('./routes/testimonials');
+        app.use('/api/testimonials', ensureDbConnection, testimonialRoutes);
 
-    console.log('Loading utilRoutes...');
-    const utilRoutes = require('./routes/utilRoutes');
-    app.use('/api', utilRoutes);
+        console.log('Loading utilRoutes...');
+        const utilRoutes = require('./routes/utilRoutes');
+        app.use('/api', utilRoutes); // Utils don't always need DB
 
-    // Load booking routes last as they seem to have the most complex patterns
-    console.log('Loading bookingRoutes...');
-    const bookingRoutes = require('./routes/bookingRoutes');
-    app.use('/api/bookings', bookingRoutes);
+        // Load booking routes last as they seem to have the most complex patterns
+        console.log('Loading bookingRoutes...');
+        const bookingRoutes = require('./routes/bookingRoutes');
+        app.use('/api/bookings', ensureDbConnection, bookingRoutes);
 
-} catch (error) {
-    console.error('Error loading routes or database:', error);
+        console.log('All routes loaded successfully');
 
-    // Fallback route when main routes fail
-    app.get('/api/*', (req, res) => {
-        res.status(503).json({
-            error: 'Service temporarily unavailable',
-            message: 'Database or routes are not available',
-            timestamp: new Date().toISOString(),
-            route: req.path
+    } catch (error) {
+        console.error('Error loading routes or database:', error);
+        
+        // Fallback route when main routes fail
+        app.get('/api/*', (req, res) => {
+            res.status(503).json({
+                error: 'Service temporarily unavailable',
+                message: 'Database or routes are not available',
+                timestamp: new Date().toISOString(),
+                route: req.path,
+                reason: error.message
+            });
         });
-    });
+    }
 }
 
-// Error handling middleware
+// Initialize the app
+initializeApp();// Error handling middleware
 app.use((err, req, res, next) => {
     console.error(err.stack);
     res.status(500).json({ error: 'Something went wrong!' });
