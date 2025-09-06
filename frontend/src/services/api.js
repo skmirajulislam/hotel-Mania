@@ -2,7 +2,7 @@ import axios from 'axios';
 
 // Create axios instance with base URL
 const api = axios.create({
-    baseURL: 'http://localhost:5002/api',
+    baseURL: 'https://hotel-mania-git-master-skmirajulislams-projects.vercel.app/api',
     headers: {
         'Content-Type': 'application/json'
     }

@@ -10,7 +10,7 @@ interface Testimonial {
   date: string;
 }
 
-const API_BASE_URL = 'http://localhost:5002/api';
+const API_BASE_URL = 'https://hotel-mania-git-master-skmirajulislams-projects.vercel.app/api';
 
 const Home: React.FC = () => {
   const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
