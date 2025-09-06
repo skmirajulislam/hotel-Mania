@@ -81,7 +81,7 @@ const AdminDashboard: React.FC = () => {
             // Fetch users (admin only)
             if (currentUser?.role === 'admin' || currentUser?.role === 'ceo') {
                 try {
-                    const usersResponse = await fetch('https://hotel-mania-two.vercel.app/api/auth/users', { headers });
+                    const usersResponse = await fetch('https://hotel-mania-server.vercel.app/api/auth/users', { headers });
                     if (usersResponse.ok) {
                         const usersData = await usersResponse.json();
                         setUsers(usersData.data || []);
@@ -93,7 +93,7 @@ const AdminDashboard: React.FC = () => {
 
             // Fetch bookings
             try {
-                const bookingsResponse = await fetch('https://hotel-mania-two.vercel.app/api/bookings', { headers });
+                const bookingsResponse = await fetch('https://hotel-mania-server.vercel.app/api/bookings', { headers });
                 if (bookingsResponse.ok) {
                     const bookingsData = await bookingsResponse.json();
                     setBookings(bookingsData.data || []);
@@ -104,7 +104,7 @@ const AdminDashboard: React.FC = () => {
 
             // Fetch stats
             try {
-                const statsResponse = await fetch('https://hotel-mania-two.vercel.app/api/bookings/stats', { headers });
+                const statsResponse = await fetch('https://hotel-mania-server.vercel.app/api/bookings/stats', { headers });
                 if (statsResponse.ok) {
                     const statsData = await statsResponse.json();
                     setStats(statsData.data || {});

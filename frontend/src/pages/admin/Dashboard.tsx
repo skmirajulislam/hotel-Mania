@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Users, UtensilsCrossed, ImageIcon, LogOut, Edit, Plus, Trash2 } from 'lucide-react';
 
-const API_BASE_URL = 'http://localhost:5002/api';
+const API_BASE_URL = 'https://hotel-mania-server.vercel.app/api';
 
 interface Room {
   _id: string;
