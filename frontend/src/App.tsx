@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { AppProviders } from './contexts/AppContext';
+import { usePerformanceMonitor } from './services/performanceMonitor.jsx';
 import Layout from './components/Layout';
 import Home from './pages/Home';
 import Rooms from './pages/Rooms';
@@ -8,10 +10,10 @@ import Gallery from './pages/Gallery';
 import Contact from './pages/Contact';
 import AuthPage from './pages/AuthPage';
 import UserDashboard from './pages/UserDashboard';
-import AdminDashboard from './pages/AdminDashboard';
 import StaffDashboard from './pages/StaffDashboard';
 import BookRoom from './pages/BookRoom';
 import BookingForm from './pages/BookingForm';
+import EnhancedBookingForm from './pages/EnhancedBookingForm';
 import Login from './pages/admin/Login';
 import Dashboard from './pages/admin/Dashboard';
 
@@ -23,9 +25,12 @@ interface User {
   role: string;
 }
 
-const App: React.FC = () => {
+const AppContent: React.FC = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [user, setUser] = useState<User | null>(null);
+
+  // Initialize performance monitoring
+  usePerformanceMonitor();
 
   useEffect(() => {
     // Check for authentication token and user data
@@ -50,6 +55,13 @@ const App: React.FC = () => {
     localStorage.setItem('user', JSON.stringify(userData));
     setUser(userData);
     setIsAuthenticated(true);
+
+    // Check for redirect after login
+    const redirectPath = localStorage.getItem('redirectAfterLogin');
+    if (redirectPath) {
+      localStorage.removeItem('redirectAfterLogin');
+      window.location.href = redirectPath; // Use window.location for full page reload with new auth state
+    }
   };
 
   const handleLogout = () => {
@@ -125,6 +137,19 @@ const App: React.FC = () => {
           !isAuthenticated ? <AuthPage /> : <Navigate to={getDashboardRoute(user?.role || 'user')} replace />
         } />
 
+        {/* Booking Routes - Allow access but require auth for actual booking */}
+        <Route path="/booking/:roomId" element={
+          <Layout>
+            <EnhancedBookingForm isAuthenticated={isAuthenticated} user={user} />
+          </Layout>
+        } />
+
+        <Route path="/room-booking/:roomId" element={
+          <Layout>
+            <EnhancedBookingForm isAuthenticated={isAuthenticated} user={user} />
+          </Layout>
+        } />
+
         {/* User Dashboard */}
         <Route path="/dashboard" element={
           <ProtectedRoute allowedRoles={['user']}>
@@ -154,19 +179,19 @@ const App: React.FC = () => {
         {/* Admin Dashboard */}
         <Route path="/admin-dashboard" element={
           <ProtectedRoute allowedRoles={['admin', 'manager']}>
-            <AdminDashboard />
+            <Dashboard onLogout={handleLogout} />
           </ProtectedRoute>
         } />
 
         {/* Executive Dashboard */}
         <Route path="/executive-dashboard" element={
           <ProtectedRoute allowedRoles={['ceo']}>
-            <AdminDashboard />
+            <Dashboard onLogout={handleLogout} />
           </ProtectedRoute>
         } />
 
         {/* Legacy booking route */}
-        <Route path="/booking/:roomId" element={
+        <Route path="/booking-form/:roomId" element={
           <Layout>
             <BookingForm />
           </Layout>
@@ -192,6 +217,14 @@ const App: React.FC = () => {
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </Router>
+  );
+};
+
+const App: React.FC = () => {
+  return (
+    <AppProviders>
+      <AppContent />
+    </AppProviders>
   );
 };
 

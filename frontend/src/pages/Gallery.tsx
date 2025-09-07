@@ -1,5 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
+import { X } from 'lucide-react';
 import LoadingSpinner from '../components/LoadingSpinner';
 import { galleryService } from '../services/api';
 
@@ -35,6 +36,18 @@ const Gallery: React.FC = () => {
 
     fetchGallery();
   }, []);
+
+  // Add keyboard escape listener for modal
+  useEffect(() => {
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && selectedItem) {
+        setSelectedItem(null);
+      }
+    };
+
+    document.addEventListener('keydown', handleEscape);
+    return () => document.removeEventListener('keydown', handleEscape);
+  }, [selectedItem]);
 
   // No need to fetch, using local data
 
@@ -124,16 +137,23 @@ const Gallery: React.FC = () => {
 
         {/* Image Modal */}
         {selectedItem && (
-          <div className="fixed inset-0 bg-black bg-opacity-90 flex items-center justify-center z-50 p-4">
+          <div
+            className="fixed inset-0 bg-black bg-opacity-90 flex items-center justify-center z-50 p-4"
+            onClick={(e) => {
+              // Close modal when clicking on backdrop
+              if (e.target === e.currentTarget) {
+                setSelectedItem(null);
+              }
+            }}
+          >
             <div className="relative max-w-4xl w-full">
-              {/* Close Button */}
+              {/* Close Button - Enhanced visibility */}
               <button
                 onClick={() => setSelectedItem(null)}
-                className="absolute top-4 right-4 z-10 bg-white bg-opacity-20 hover:bg-opacity-30 rounded-full p-2 text-white transition-all duration-200"
+                className="absolute top-4 right-4 z-10 bg-white bg-opacity-20 hover:bg-opacity-30 backdrop-blur-sm rounded-full p-3 text-white transition-all duration-200 border border-white border-opacity-30"
+                title="Close (Press Esc)"
               >
-                <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                </svg>
+                <X className="h-6 w-6" />
               </button>
 
               {/* Image */}

@@ -1,27 +1,49 @@
-
 import React, { useState, useEffect } from 'react';
-import { Bed, Users, Wifi, Eye, X } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { Bed, Users, Wifi, Eye, X, ChevronLeft, ChevronRight } from 'lucide-react';
 import LoadingSpinner from '../components/LoadingSpinner';
 import { roomsService } from '../services/api';
 
 interface Room {
   _id: string;
-  category: string;
+  category: {
+    _id: string;
+    name: string;
+    description: string;
+    basePrice: number;
+    availableRooms: number;
+    id: string;
+  } | string; // Support both populated object and string ID
   name: string;
   description: string;
   price: number;
-  available: number;
-  total: number;
-  images: string[];
-  videos?: string[];
+  available?: number;
+  total?: number;
+  isAvailable?: boolean;
+  images: Array<{
+    url: string;
+    cloudinaryId: string;
+    caption: string;
+  }>;
+  videos?: Array<{
+    url: string;
+    cloudinaryId: string;
+    title: string;
+  }>;
   amenities: string[];
 }
+
+// Helper function to get category name
+const getCategoryName = (category: Room['category']): string => {
+  return typeof category === 'object' ? category.name : category;
+};
 
 const Rooms: React.FC = () => {
   const [rooms, setRooms] = useState<Room[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedRoom, setSelectedRoom] = useState<Room | null>(null);
   const [error, setError] = useState<string>('');
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
   useEffect(() => {
     const fetchRooms = async () => {
@@ -42,203 +64,243 @@ const Rooms: React.FC = () => {
     fetchRooms();
   }, []);
 
-  if (loading) return <LoadingSpinner />;
+  // Add keyboard escape listener for modal
+  useEffect(() => {
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && selectedRoom) {
+        setSelectedRoom(null);
+        setCurrentImageIndex(0);
+      }
+    };
+
+    window.addEventListener('keydown', handleEscape);
+    return () => window.removeEventListener('keydown', handleEscape);
+  }, [selectedRoom]);
+
+  // Reset image index when modal opens
+  useEffect(() => {
+    if (selectedRoom) {
+      setCurrentImageIndex(0);
+    }
+  }, [selectedRoom]);
+
+  // Slideshow navigation functions
+  const nextImage = () => {
+    if (selectedRoom) {
+      const maxImages = Math.min(selectedRoom.images.length, 4);
+      setCurrentImageIndex((prev) => (prev + 1) % maxImages);
+    }
+  };
+
+  const prevImage = () => {
+    if (selectedRoom) {
+      const maxImages = Math.min(selectedRoom.images.length, 4);
+      setCurrentImageIndex((prev) => (prev - 1 + maxImages) % maxImages);
+    }
+  };
+
+  const goToImage = (index: number) => {
+    setCurrentImageIndex(index);
+  };
+
+  if (loading) {
+    return <LoadingSpinner />;
+  }
 
   if (error) {
     return (
-      <div className="py-16 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg">
-            {error}
-          </div>
+      <div className="min-h-screen flex items-center justify-center bg-gray-100">
+        <div className="text-center p-8">
+          <h2 className="text-2xl font-bold text-gray-900 mb-4">Error</h2>
+          <p className="text-gray-600 mb-4">{error}</p>
+          <button
+            onClick={() => window.location.reload()}
+            className="bg-yellow-600 hover:bg-yellow-700 text-white px-6 py-2 rounded-lg"
+          >
+            Try Again
+          </button>
         </div>
       </div>
     );
   }
 
-  // Debug: Log rooms data
-  console.log('Rooms data:', rooms);
-  console.log('Rooms length:', rooms.length);
-
   return (
-    <div className="py-16 bg-gray-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Header */}
-        <div className="text-center mb-16">
-          <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">Our Luxury Accommodations</h1>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            Choose from our three distinct room categories: Standard, Premium, and Luxury. Each category offers unique amenities and unparalleled comfort for your perfect stay.
+    <div className="min-h-screen bg-gray-100">
+      <div className="container mx-auto px-4 py-8">
+        <div className="text-center mb-12">
+          <h1 className="text-4xl font-bold text-gray-900 mb-4">Our Rooms</h1>
+          <p className="text-gray-600 text-lg max-w-2xl mx-auto">
+            Experience luxury and comfort in our carefully designed rooms
           </p>
         </div>
 
-        {/* Debug info */}
-        {rooms.length === 0 && (
-          <div className="text-center mb-8">
-            <div className="bg-yellow-50 border border-yellow-200 text-yellow-700 px-4 py-3 rounded-lg">
-              No rooms available. Debug: Rooms array length is {rooms.length}
-            </div>
+        {rooms.length === 0 ? (
+          <div className="text-center py-12">
+            <p className="text-gray-500 text-lg">No rooms available at the moment.</p>
           </div>
-        )}
-
-        {/* Room Categories */}
-        <div className="space-y-16">
-          {rooms.map((room) => (
-            <div
-              key={room._id}
-              className="bg-white rounded-2xl shadow-xl overflow-hidden"
-            >
-              {/* Category Header */}
-              <div className="bg-gradient-to-r from-yellow-600 to-yellow-700 p-8 text-white">
-                <div className="flex justify-between items-center">
-                  <div>
-                    <h2 className="text-3xl font-bold mb-2">{room.category} Rooms</h2>
-                    <p className="text-yellow-100 text-lg">{room.name}</p>
+        ) : (
+          <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-8">
+            {rooms.map((room) => (
+              <div key={room._id} className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300">
+                <div className="relative h-64">
+                  {room.videos && room.videos.length > 0 ? (
+                    <video
+                      src={room.videos[0].url}
+                      className="w-full h-full object-cover"
+                      muted
+                      autoPlay
+                      loop
+                    />
+                  ) : room.images && room.images.length > 0 ? (
+                    <img
+                      src={room.images[0].url}
+                      alt={room.name}
+                      className="w-full h-full object-cover"
+                    />
+                  ) : (
+                    <div className="w-full h-full bg-gray-200 flex items-center justify-center">
+                      <span className="text-gray-500">No image available</span>
+                    </div>
+                  )}
+                  <div className="absolute top-4 right-4 bg-yellow-600 text-white px-3 py-1 rounded-full text-sm font-semibold">
+                    {getCategoryName(room.category)}
                   </div>
-                  <div className="text-right">
-                    <div className="text-4xl font-bold">{room.price} INR</div>
-                    <div className="text-yellow-100">per night</div>
+                  <div className="absolute bottom-4 left-4 bg-black bg-opacity-50 text-white px-3 py-1 rounded-lg text-sm">
+                    {room.images?.length || 0} Photos
                   </div>
                 </div>
-              </div>
 
-              <div className="p-8">
-                {/* Availability Status */}
-                <div className="mb-6 p-4 rounded-lg bg-gray-50">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <h3 className="text-lg font-semibold text-gray-900">Room Availability</h3>
-                      <p className="text-gray-600">Total rooms in this category: {room.total}</p>
-                    </div>
+                <div className="p-6">
+                  <div className="flex items-center justify-between mb-3">
+                    <h2 className="text-xl font-bold text-gray-900">{room.name}</h2>
                     <div className="text-right">
-                      <div className={`text-2xl font-bold ${room.available > 5 ? 'text-green-600' :
-                        room.available > 0 ? 'text-yellow-600' :
-                          'text-red-600'
-                        }`}>
-                        {room.available} Available
-                      </div>
-                      <div className={`text-sm font-medium ${room.available > 5 ? 'text-green-600' :
-                        room.available > 0 ? 'text-yellow-600' :
-                          'text-red-600'
-                        }`}>
-                        {room.available > 5 ? 'Good Availability' :
-                          room.available > 0 ? 'Limited Availability' :
-                            'Fully Booked'}
-                      </div>
+                      <div className="text-2xl font-bold text-gray-900">{room.price} INR</div>
+                      <div className="text-sm text-gray-500">per night</div>
                     </div>
                   </div>
-                </div>
 
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                  {/* Room Images */}
-                  <div className="space-y-4">
-                    <div className="relative h-64 overflow-hidden rounded-lg">
-                      {room.videos && room.videos.length > 0 ? (
-                        <video
-                          src={room.videos[0]}
-                          className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
-                          controls
-                          muted
-                        />
-                      ) : (
-                        <img
-                          src={room.images[0]}
-                          alt={room.name}
-                          className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
-                        />
-                      )}
+                  <p className="text-gray-600 mb-4 line-clamp-3">{room.description}</p>
+
+                  <div className="flex items-center gap-4 mb-4 text-sm text-gray-600">
+                    <div className="flex items-center gap-1">
+                      <Bed className="h-4 w-4" />
+                      <span>King Size</span>
                     </div>
-                    {room.images[1] && (
-                      <div className="relative h-32 overflow-hidden rounded-lg">
-                        <img
-                          src={room.images[1]}
-                          alt={`${room.name} view 2`}
-                          className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
-                        />
-                      </div>
+                    <div className="flex items-center gap-1">
+                      <Users className="h-4 w-4" />
+                      <span>2 Guests</span>
+                    </div>
+                    <div className="flex items-center gap-1">
+                      <Wifi className="h-4 w-4" />
+                      <span>Free Wi-Fi</span>
+                    </div>
+                  </div>
+
+                  <div className={`text-sm font-semibold mb-4 ${room.isAvailable ? 'text-green-600' : 'text-red-600'
+                    }`}>
+                    {room.isAvailable ? 'Available' : 'Not Available'}
+                    {room.available && room.total && (
+                      <span className="ml-2">({room.available} of {room.total} rooms available)</span>
                     )}
                   </div>
 
-                  {/* Room Details */}
-                  <div className="space-y-6">
-                    <div>
-                      <h3 className="text-xl font-bold text-gray-900 mb-3">Description</h3>
-                      <p className="text-gray-600 leading-relaxed">{room.description}</p>
-                    </div>
+                  <div className="space-y-3">
+                    <button
+                      onClick={() => setSelectedRoom(room)}
+                      className="w-full bg-yellow-600 hover:bg-yellow-700 text-white px-6 py-3 rounded-lg font-semibold transition-colors duration-200 flex items-center justify-center gap-2"
+                    >
+                      <Eye className="h-5 w-5" />
+                      View Full Details
+                    </button>
 
-                    <div>
-                      <h3 className="text-xl font-bold text-gray-900 mb-3">Amenities</h3>
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                        {room.amenities.map((amenity, index) => (
-                          <div key={index} className="flex items-center gap-2 text-gray-700">
-                            <div className="w-2 h-2 bg-yellow-600 rounded-full"></div>
-                            <span className="text-sm">{amenity}</span>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-
-                    <div className="pt-4 space-y-3">
-                      <button
-                        onClick={() => setSelectedRoom(room)}
-                        className="w-full bg-yellow-600 hover:bg-yellow-700 text-white px-6 py-3 rounded-lg font-semibold transition-colors duration-200 flex items-center justify-center gap-2"
-                      >
-                        <Eye className="h-5 w-5" />
-                        View Full Details
-                      </button>
-
-                      <a
-                        href={`/booking/${room._id}`}
-                        className={`w-full bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-semibold transition-colors duration-200 flex items-center justify-center gap-2 ${room.available < 1 ? 'opacity-50 cursor-not-allowed pointer-events-none' : ''
-                          }`}
-                      >
-                        <Bed className="h-5 w-5" />
-                        {room.available > 0 ? 'Book Now' : 'Fully Booked'}
-                      </a>
-                    </div>
+                    <Link
+                      to={`/booking/${room._id}`}
+                      className={`w-full bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-semibold transition-colors duration-200 flex items-center justify-center gap-2 ${!room.isAvailable || (room.available !== undefined && room.available < 1)
+                        ? 'opacity-50 cursor-not-allowed pointer-events-none'
+                        : ''
+                        }`}
+                    >
+                      <Bed className="h-5 w-5" />
+                      {room.isAvailable && (room.available === undefined || room.available > 0) ? 'Book Now' : 'Fully Booked'}
+                    </Link>
                   </div>
                 </div>
               </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
 
-        {/* Room Details Modal */}
+        {/* Room Details Modal with Image Slideshow */}
         {selectedRoom && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
             <div className="bg-white rounded-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
               <div className="relative">
                 {/* Close Button */}
                 <button
-                  onClick={() => setSelectedRoom(null)}
+                  onClick={() => {
+                    setSelectedRoom(null);
+                    setCurrentImageIndex(0);
+                  }}
                   className="absolute top-4 right-4 z-10 bg-white rounded-full p-2 shadow-lg hover:shadow-xl transition-shadow"
                 >
                   <X className="h-6 w-6" />
                 </button>
 
-                {/* Media Gallery */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-6">
-                  {/* Display videos first if available */}
-                  {selectedRoom.videos && selectedRoom.videos.map((video, index) => (
-                    <div key={`video-${index}`} className="relative h-64 overflow-hidden rounded-lg">
-                      <video
-                        src={video}
-                        className="w-full h-full object-cover"
-                        controls
-                        muted
-                      />
-                    </div>
-                  ))}
+                {/* Image Slideshow */}
+                <div className="relative">
+                  {/* Main Image Display */}
+                  <div className="relative h-96 overflow-hidden rounded-t-xl">
+                    <img
+                      src={selectedRoom.images[currentImageIndex]?.url || ''}
+                      alt={`${selectedRoom.name} ${currentImageIndex + 1}`}
+                      className="w-full h-full object-cover"
+                    />
 
-                  {/* Then display images */}
-                  {selectedRoom.images.map((image, index) => (
-                    <div key={`image-${index}`} className="relative h-64 overflow-hidden rounded-lg">
-                      <img
-                        src={image}
-                        alt={`${selectedRoom.name} ${index + 1}`}
-                        className="w-full h-full object-cover"
-                      />
+                    {/* Navigation Arrows */}
+                    {selectedRoom.images.length > 1 && (
+                      <>
+                        <button
+                          onClick={prevImage}
+                          className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 text-white p-2 rounded-full hover:bg-opacity-70 transition-all"
+                        >
+                          <ChevronLeft className="h-6 w-6" />
+                        </button>
+                        <button
+                          onClick={nextImage}
+                          className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 text-white p-2 rounded-full hover:bg-opacity-70 transition-all"
+                        >
+                          <ChevronRight className="h-6 w-6" />
+                        </button>
+                      </>
+                    )}
+
+                    {/* Image Counter */}
+                    <div className="absolute bottom-4 left-4 bg-black bg-opacity-50 text-white px-3 py-1 rounded-lg text-sm">
+                      {currentImageIndex + 1} / {Math.min(selectedRoom.images.length, 4)}
                     </div>
-                  ))}
+                  </div>
+
+                  {/* Thumbnail Navigation */}
+                  {selectedRoom.images.length > 1 && (
+                    <div className="flex justify-center gap-2 p-4 bg-gray-50">
+                      {selectedRoom.images.slice(0, 4).map((image, index) => (
+                        <button
+                          key={index}
+                          onClick={() => goToImage(index)}
+                          className={`relative h-16 w-20 overflow-hidden rounded-lg border-2 transition-all ${currentImageIndex === index
+                            ? 'border-yellow-600 ring-2 ring-yellow-200'
+                            : 'border-gray-300 hover:border-gray-400'
+                            }`}
+                        >
+                          <img
+                            src={image.url}
+                            alt={`${selectedRoom.name} thumbnail ${index + 1}`}
+                            className="w-full h-full object-cover"
+                          />
+                        </button>
+                      ))}
+                    </div>
+                  )}
                 </div>
 
                 {/* Room Details */}
@@ -246,15 +308,18 @@ const Rooms: React.FC = () => {
                   <div className="flex items-center justify-between mb-4">
                     <div>
                       <h2 className="text-3xl font-bold text-gray-900">{selectedRoom.name}</h2>
-                      <span className="text-yellow-600 font-semibold">{selectedRoom.category} Room</span>
+                      <span className="text-yellow-600 font-semibold">
+                        {getCategoryName(selectedRoom.category)} Room
+                      </span>
                     </div>
                     <div className="text-right">
                       <div className="text-3xl font-bold text-gray-900">{selectedRoom.price} INR/night</div>
-                      <div className={`text-sm font-semibold ${selectedRoom.available > 5 ? 'text-green-600' :
-                        selectedRoom.available > 0 ? 'text-yellow-600' :
-                          'text-red-600'
+                      <div className={`text-sm font-semibold ${selectedRoom.isAvailable ? 'text-green-600' : 'text-red-600'
                         }`}>
-                        {selectedRoom.available} of {selectedRoom.total} rooms available
+                        {selectedRoom.isAvailable ? 'Available' : 'Not Available'}
+                        {selectedRoom.available && selectedRoom.total && (
+                          <span className="ml-2">({selectedRoom.available} of {selectedRoom.total} rooms available)</span>
+                        )}
                       </div>
                     </div>
                   </div>
@@ -290,6 +355,24 @@ const Rooms: React.FC = () => {
                         </div>
                       </div>
                     </div>
+                  </div>
+
+                  {/* Action Buttons */}
+                  <div className="mt-6 flex gap-4">
+                    <Link
+                      to={`/booking/${selectedRoom._id}`}
+                      className={`flex-1 bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-semibold transition-colors duration-200 flex items-center justify-center gap-2 ${!selectedRoom.isAvailable || (selectedRoom.available !== undefined && selectedRoom.available < 1)
+                        ? 'opacity-50 cursor-not-allowed pointer-events-none'
+                        : ''
+                        }`}
+                      onClick={() => {
+                        setSelectedRoom(null);
+                        setCurrentImageIndex(0);
+                      }}
+                    >
+                      <Bed className="h-5 w-5" />
+                      {selectedRoom.isAvailable && (selectedRoom.available === undefined || selectedRoom.available > 0) ? 'Book Now' : 'Fully Booked'}
+                    </Link>
                   </div>
                 </div>
               </div>

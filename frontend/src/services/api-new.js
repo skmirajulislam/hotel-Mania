@@ -258,11 +258,9 @@ export const roomsService = {
     getAllRooms: async () => {
         try {
             const response = await api.get('/api/rooms');
-            // Backend returns { success: true, data: [...], pagination: {...} }
-            return response.data.data || [];
+            return response.data;
         } catch (error) {
             handleApiError(error, 'rooms.getAllRooms');
-            return [];
         }
     },
 
@@ -270,11 +268,9 @@ export const roomsService = {
         try {
             if (!id) throw new Error('Room ID is required');
             const response = await api.get(`/api/rooms/${id}`);
-            // Backend returns { success: true, data: room }
-            return response.data.data || null;
+            return response.data;
         } catch (error) {
             handleApiError(error, 'rooms.getRoomById');
-            return null;
         }
     },
 
@@ -319,11 +315,9 @@ export const menuService = {
     getAllMenuItems: async () => {
         try {
             const response = await api.get('/api/menu');
-            // Backend returns { success: true, data: [...], pagination: {...} }
-            return response.data.data || [];
+            return response.data;
         } catch (error) {
             handleApiError(error, 'menu.getAllMenuItems');
-            return [];
         }
     },
 
@@ -359,46 +353,6 @@ export const menuService = {
             return response.data;
         } catch (error) {
             handleApiError(error, 'menu.deleteMenuItem');
-        }
-    }
-};
-
-// Food Categories service
-export const foodCategoriesService = {
-    getAllCategories: async () => {
-        try {
-            const response = await api.get('/api/food-categories');
-            return response.data.data || [];
-        } catch (error) {
-            handleApiError(error, 'foodCategories.getAllCategories');
-            return [];
-        }
-    },
-
-    createCategory: async (categoryData) => {
-        try {
-            const response = await api.post('/api/food-categories', categoryData);
-            return response.data;
-        } catch (error) {
-            handleApiError(error, 'foodCategories.createCategory');
-        }
-    },
-
-    updateCategory: async (id, categoryData) => {
-        try {
-            const response = await api.put(`/api/food-categories/${id}`, categoryData);
-            return response.data;
-        } catch (error) {
-            handleApiError(error, 'foodCategories.updateCategory');
-        }
-    },
-
-    deleteCategory: async (id) => {
-        try {
-            const response = await api.delete(`/api/food-categories/${id}`);
-            return response.data;
-        } catch (error) {
-            handleApiError(error, 'foodCategories.deleteCategory');
         }
     }
 };
@@ -502,7 +456,7 @@ export const bookingService = {
 
     getBookingStats: async () => {
         try {
-            const response = await api.get('/api/bookings/stats/overview');
+            const response = await api.get('/api/bookings/stats');
             return response.data;
         } catch (error) {
             handleApiError(error, 'bookings.getBookingStats');
@@ -542,54 +496,6 @@ export const packagesService = {
             return response.data;
         } catch (error) {
             handleApiError(error, 'packages.getAllPackages');
-        }
-    }
-};
-
-// Orders service for restaurant
-export const orderService = {
-    createPaymentIntent: async (orderData) => {
-        try {
-            const response = await api.post('/api/orders/create-payment-intent', orderData);
-            return response.data;
-        } catch (error) {
-            handleApiError(error, 'orders.createPaymentIntent');
-        }
-    },
-
-    confirmPayment: async (paymentData) => {
-        try {
-            const response = await api.post('/api/orders/confirm-payment', paymentData);
-            return response.data;
-        } catch (error) {
-            handleApiError(error, 'orders.confirmPayment');
-        }
-    },
-
-    getOrder: async (orderId) => {
-        try {
-            const response = await api.get(`/api/orders/${orderId}`);
-            return response.data;
-        } catch (error) {
-            handleApiError(error, 'orders.getOrder');
-        }
-    },
-
-    getAllOrders: async () => {
-        try {
-            const response = await api.get('/api/orders');
-            return response.data;
-        } catch (error) {
-            handleApiError(error, 'orders.getAllOrders');
-        }
-    },
-
-    updateOrderStatus: async (orderId, status) => {
-        try {
-            const response = await api.put(`/api/orders/${orderId}/status`, { status });
-            return response.data;
-        } catch (error) {
-            handleApiError(error, 'orders.updateOrderStatus');
         }
     }
 };

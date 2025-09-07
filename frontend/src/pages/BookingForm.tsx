@@ -5,27 +5,52 @@ import LoadingSpinner from '../components/LoadingSpinner';
 import Modal from '../components/Modal';
 
 // Date utils
-const formatDate = (date) => {
-    return new Date(date).toISOString().split('T')[0];
+const formatDate = (date: Date) => {
+    return date.toISOString().split('T')[0];
 };
 
-const calculateNights = (checkIn, checkOut) => {
+const calculateNights = (checkIn: string, checkOut: string) => {
     const start = new Date(checkIn);
     const end = new Date(checkOut);
-    const diffTime = Math.abs(end - start);
+    const diffTime = Math.abs(end.getTime() - start.getTime());
     return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 };
 
-const BookingForm = () => {
+interface User {
+    _id: string;
+    firstName: string;
+    lastName: string;
+    email: string;
+    phone?: string;
+    role: string;
+}
+
+interface Room {
+    _id: string;
+    name: string;
+    description: string;
+    price: number;
+    category: string;
+    images: string[];
+    available: number;
+    amenities: string[];
+}
+
+interface BookingFormProps {
+    isAuthenticated?: boolean;
+    user?: User | null;
+}
+
+const BookingForm: React.FC<BookingFormProps> = () => {
     const { roomId } = useParams();
     const navigate = useNavigate();
 
-    const [room, setRoom] = useState(null);
+    const [room, setRoom] = useState<Room | null>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
     const [showConfirmation, setShowConfirmation] = useState(false);
     const [showPayment, setShowPayment] = useState(false);
-    const [bookingComplete, setBookingComplete] = useState(false);
+    const [bookingComplete] = useState(false);
     const [confirmationNumber, setConfirmationNumber] = useState('');
 
     // Form state
@@ -106,8 +131,8 @@ const BookingForm = () => {
                     checkIn: formData.checkIn,
                     checkOut: formData.checkOut,
                     numberOfGuests: {
-                        adults: parseInt(formData.adults),
-                        children: parseInt(formData.children)
+                        adults: formData.adults,
+                        children: formData.children
                     },
                     totalPrice
                 })
@@ -117,17 +142,13 @@ const BookingForm = () => {
                 throw new Error('Booking failed');
             }
 
-            const data = await response.json();
+            const bookingResponse = await response.json();
 
             // In a real app, you would use the payment client secret to
             // collect payment information with Stripe Elements
             // For this demo, we'll simulate a successful payment
 
-            setTimeout(() => {
-                setShowPayment(false);
-                setBookingComplete(true);
-                setConfirmationNumber(`BK${Date.now().toString().substr(-6)}`);
-            }, 2000);
+            setConfirmationNumber(bookingResponse.booking?.bookingNumber || 'BK' + Date.now());
 
         } catch (error) {
             setError('Failed to complete booking');
@@ -357,7 +378,7 @@ const BookingForm = () => {
             )}
 
             {/* Booking Confirmation Modal */}
-            <Modal isOpen={showConfirmation} onClose={() => setShowConfirmation(false)}>
+            <Modal isOpen={showConfirmation} onClose={() => setShowConfirmation(false)} title="Booking Confirmation">
                 <div className="p-6">
                     <h2 className="text-2xl font-bold mb-4">Confirm Your Booking</h2>
 
@@ -393,7 +414,7 @@ const BookingForm = () => {
             </Modal>
 
             {/* Payment Modal (simplified for demo) */}
-            <Modal isOpen={showPayment} onClose={() => { }}>
+            <Modal isOpen={showPayment} onClose={() => { }} title="Payment">
                 <div className="p-6">
                     <h2 className="text-2xl font-bold mb-4">Payment</h2>
 

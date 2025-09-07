@@ -543,22 +543,30 @@ const getAllBookings = async (req, res) => {
             // Add logic to filter by department-relevant bookings
         }
 
-        const options = {
-            page: parseInt(page),
-            limit: parseInt(limit),
-            sort: { createdAt: -1 },
-            populate: 'room user'
-        };
+        const pageNum = parseInt(page);
+        const limitNum = parseInt(limit);
+        const skip = (pageNum - 1) * limitNum;
 
-        const bookings = await Booking.paginate(query, options);
+        // Get total count for pagination
+        const total = await Booking.countDocuments(query);
+
+        // Get bookings with pagination
+        const bookings = await Booking.find(query)
+            .populate('room', 'roomNumber type rate')
+            .populate('user', 'firstName lastName email phone')
+            .sort({ createdAt: -1 })
+            .skip(skip)
+            .limit(limitNum);
 
         res.json({
             success: true,
-            bookings: bookings.docs,
+            bookings,
             pagination: {
-                page: bookings.page,
-                pages: bookings.totalPages,
-                total: bookings.totalDocs
+                page: pageNum,
+                pages: Math.ceil(total / limitNum),
+                total,
+                hasNext: pageNum < Math.ceil(total / limitNum),
+                hasPrev: pageNum > 1
             }
         });
     } catch (error) {
