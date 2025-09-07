@@ -7,8 +7,8 @@ const router = express.Router();
 
 // Menu routes
 router.get('/', getAllMenuItems);
-router.post('/', auth, authorize(['admin']), upload.single('image'), uploadToCloudinary, createMenuItem);
-router.put('/:id', auth, authorize(['admin']), updateMenuItem);
-router.delete('/:id', auth, authorize(['admin']), deleteMenuItem);
+router.post('/', auth, authorize(['admin', 'manager', 'ceo']), upload.single('image'), uploadToCloudinary, createMenuItem);
+router.put('/:id', auth, authorize(['admin', 'manager', 'ceo']), updateMenuItem);
+router.delete('/:id', auth, authorize(['admin', 'manager', 'ceo']), deleteMenuItem);
 
 module.exports = router;

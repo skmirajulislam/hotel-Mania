@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
   Users, LogOut, Edit, Plus, Trash2,
   Home, Settings, Calendar, Eye, DollarSign, Building,
@@ -19,6 +19,7 @@ interface Room {
   category?: string;
   images: string[];
   features: string[];
+  amenities: string[];
   maxOccupancy: number;
   bedType: string;
   roomSize: number;
@@ -238,44 +239,82 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout }) => {
   const [editingRoomCategory, setEditingRoomCategory] = useState<RoomCategory | undefined>(undefined);
   const [editingFoodCategory, setEditingFoodCategory] = useState<FoodCategory | undefined>(undefined);
 
-  useEffect(() => {
-    fetchData();
-    fetchCurrentUser();
-  }, []);
-
-  const fetchCurrentUser = async () => {
+  const fetchCurrentUser = useCallback(async () => {
     try {
-      const token = localStorage.getItem('authToken');
+      const token = localStorage.getItem('token');
+      if (!token) {
+        console.log('No token found, skipping user fetch');
+        return;
+      }
+
       const response = await fetch(`${API_BASE_URL}/auth/me`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
       });
+
+      if (response.status === 429) {
+        console.log('Rate limited, will retry after delay');
+        setTimeout(() => fetchCurrentUser(), 5000);
+        return;
+      }
+
       if (response.ok) {
         const userData = await response.json();
-        setCurrentUser(userData.data);
+        console.log('User data response:', userData); // Debug log
+        // Handle both possible response structures
+        const user = userData.data || userData;
+        setCurrentUser(user);
         setNewCredentials({
-          firstName: userData.data.firstName || '',
-          lastName: userData.data.lastName || '',
-          email: userData.data.email || '',
+          firstName: user.firstName || '',
+          lastName: user.lastName || '',
+          email: user.email || '',
           password: ''
         });
       }
     } catch (error) {
       console.error('Error fetching current user:', error);
     }
-  };
+  }, []);
+
+  useEffect(() => {
+    fetchData();
+    fetchCurrentUser();
+  }, [fetchCurrentUser]);
 
   const fetchData = async () => {
     setLoading(true);
     try {
-      const token = localStorage.getItem('authToken');
+      const token = localStorage.getItem('token');
+      if (!token) {
+        console.log('No token found, redirecting to login');
+        return;
+      }
+
       const headers = {
         'Authorization': `Bearer ${token}`,
         'Content-Type': 'application/json'
       };
 
-      // Fetch all data with error handling
+      // Fetch all data with error handling and rate limiting
+      const fetchWithRetry = async (url: string, retries = 3) => {
+        for (let i = 0; i < retries; i++) {
+          try {
+            const response = await fetch(url, { headers });
+            if (response.status === 429) {
+              console.log(`Rate limited for ${url}, retrying in ${(i + 1) * 2}s...`);
+              await new Promise(resolve => setTimeout(resolve, (i + 1) * 2000));
+              continue;
+            }
+            return response;
+          } catch (error) {
+            if (i === retries - 1) throw error;
+            await new Promise(resolve => setTimeout(resolve, 1000));
+          }
+        }
+        return null;
+      };
+
       const [
         roomsResponse,
         menuResponse,
@@ -284,12 +323,12 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout }) => {
         roomCategoriesResponse,
         foodCategoriesResponse
       ] = await Promise.all([
-        fetch(`${API_BASE_URL}/rooms`, { headers }).catch(() => null),
-        fetch(`${API_BASE_URL}/menu`, { headers }).catch(() => null),
-        fetch(`${API_BASE_URL}/employees`, { headers }).catch(() => null),
-        fetch(`${API_BASE_URL}/bookings`, { headers }).catch(() => null),
-        fetch(`${API_BASE_URL}/room-categories`, { headers }).catch(() => null),
-        fetch(`${API_BASE_URL}/food-categories`, { headers }).catch(() => null)
+        fetchWithRetry(`${API_BASE_URL}/rooms`),
+        fetchWithRetry(`${API_BASE_URL}/menu`),
+        fetchWithRetry(`${API_BASE_URL}/employees`),
+        fetchWithRetry(`${API_BASE_URL}/bookings`),
+        fetchWithRetry(`${API_BASE_URL}/room-categories`),
+        fetchWithRetry(`${API_BASE_URL}/food-categories`)
       ]);
 
       if (roomsResponse?.ok) {
@@ -334,7 +373,7 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout }) => {
     setConfirmMessage('Are you sure you want to update your admin credentials? This will require you to log in again.');
     setConfirmAction(() => async () => {
       try {
-        const token = localStorage.getItem('authToken');
+        const token = localStorage.getItem('token');
         const response = await fetch(`${API_BASE_URL}/auth/update-profile`, {
           method: 'PUT',
           headers: {
@@ -364,7 +403,7 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout }) => {
     setConfirmMessage(`Are you sure you want to delete "${name}"? This action cannot be undone.`);
     setConfirmAction(() => async () => {
       try {
-        const token = localStorage.getItem('authToken');
+        const token = localStorage.getItem('token');
         const endpoint = type === 'room' ? 'rooms' :
           type === 'menu-item' ? 'menu' :
             type === 'employee' ? 'employees' :
@@ -397,7 +436,7 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout }) => {
   // CRUD Functions
   const handleSaveRoom = async (roomData: Omit<Room, '_id'>) => {
     try {
-      const token = localStorage.getItem('authToken');
+      const token = localStorage.getItem('token');
       const url = editingRoom
         ? `${API_BASE_URL}/rooms/${editingRoom._id}`
         : `${API_BASE_URL}/rooms`;
@@ -427,7 +466,7 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout }) => {
 
   const handleSaveMenuItem = async (menuItemData: Omit<MenuItem, '_id'>) => {
     try {
-      const token = localStorage.getItem('authToken');
+      const token = localStorage.getItem('token');
       const url = editingMenuItem
         ? `${API_BASE_URL}/menu/${editingMenuItem._id}`
         : `${API_BASE_URL}/menu`;
@@ -457,7 +496,7 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout }) => {
 
   const handleSaveRoomCategory = async (categoryData: Omit<RoomCategory, '_id'>) => {
     try {
-      const token = localStorage.getItem('authToken');
+      const token = localStorage.getItem('token');
       const url = editingRoomCategory
         ? `${API_BASE_URL}/room-categories/${editingRoomCategory._id}`
         : `${API_BASE_URL}/room-categories`;
@@ -487,7 +526,7 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout }) => {
 
   const handleSaveFoodCategory = async (categoryData: Omit<FoodCategory, '_id'>) => {
     try {
-      const token = localStorage.getItem('authToken');
+      const token = localStorage.getItem('token');
       const url = editingFoodCategory
         ? `${API_BASE_URL}/food-categories/${editingFoodCategory._id}`
         : `${API_BASE_URL}/food-categories`;
@@ -518,10 +557,10 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout }) => {
   const renderOverviewTab = () => {
     const totalRooms = rooms.length;
     const availableRooms = rooms.filter(room => room.isAvailable).length;
-    const totalBookings = bookings.length;
+    const totalBookings = Array.isArray(bookings) ? bookings.length : 0;
     const totalEmployees = employees.length;
     const activeEmployees = employees.filter(emp => emp.isActive).length;
-    const totalRevenue = bookings.reduce((sum, booking) => sum + booking.pricing.totalAmount, 0);
+    const totalRevenue = Array.isArray(bookings) ? bookings.reduce((sum, booking) => sum + (booking.pricing?.totalAmount || 0), 0) : 0;
 
     return (
       <div className="space-y-6">
@@ -638,54 +677,60 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout }) => {
         </div>
       ) : (
         <div className="space-y-4">
-          {bookings.map((booking) => (
-            <div key={booking._id} className="bg-white rounded-lg shadow p-6">
-              <div className="flex justify-between items-start">
-                <div className="flex-1">
-                  <h3 className="text-lg font-semibold mb-2">
-                    Booking #{booking.bookingNumber}
-                  </h3>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                      <p className="text-sm text-gray-600">Guest: {booking.user.firstName} {booking.user.lastName}</p>
-                      <p className="text-sm text-gray-600">Email: {booking.user.email}</p>
-                      <p className="text-sm text-gray-600">Phone: {booking.user.phone}</p>
+          {Array.isArray(bookings) && bookings.length > 0 ? (
+            bookings.map((booking) => (
+              <div key={booking._id} className="bg-white rounded-lg shadow p-6">
+                <div className="flex justify-between items-start">
+                  <div className="flex-1">
+                    <h3 className="text-lg font-semibold mb-2">
+                      Booking #{booking.bookingNumber}
+                    </h3>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div>
+                        <p className="text-sm text-gray-600">Guest: {booking.user?.firstName} {booking.user?.lastName}</p>
+                        <p className="text-sm text-gray-600">Email: {booking.user?.email}</p>
+                        <p className="text-sm text-gray-600">Phone: {booking.user?.phone}</p>
+                      </div>
+                      <div>
+                        <p className="text-sm text-gray-600">Room: {booking.room?.name} ({booking.room?.roomNumber})</p>
+                        <p className="text-sm text-gray-600">Check-in: {new Date(booking.checkInDate).toLocaleDateString()}</p>
+                        <p className="text-sm text-gray-600">Check-out: {new Date(booking.checkOutDate).toLocaleDateString()}</p>
+                      </div>
                     </div>
-                    <div>
-                      <p className="text-sm text-gray-600">Room: {booking.room.name} ({booking.room.roomNumber})</p>
-                      <p className="text-sm text-gray-600">Check-in: {new Date(booking.checkInDate).toLocaleDateString()}</p>
-                      <p className="text-sm text-gray-600">Check-out: {new Date(booking.checkOutDate).toLocaleDateString()}</p>
-                    </div>
+
+                    {booking.specialRequests && (
+                      <div className="mt-4 p-3 bg-gray-50 rounded">
+                        <h4 className="font-medium text-sm mb-2">Special Requests:</h4>
+                        {booking.specialRequests.dietaryRestrictions?.length > 0 && (
+                          <p className="text-sm text-gray-600">Dietary: {booking.specialRequests.dietaryRestrictions.join(', ')}</p>
+                        )}
+                        {booking.specialRequests.accessibility?.length > 0 && (
+                          <p className="text-sm text-gray-600">Accessibility: {booking.specialRequests.accessibility.join(', ')}</p>
+                        )}
+                        {booking.specialRequests.additionalRequests && (
+                          <p className="text-sm text-gray-600">Additional: {booking.specialRequests.additionalRequests}</p>
+                        )}
+                      </div>
+                    )}
                   </div>
 
-                  {booking.specialRequests && (
-                    <div className="mt-4 p-3 bg-gray-50 rounded">
-                      <h4 className="font-medium text-sm mb-2">Special Requests:</h4>
-                      {booking.specialRequests.dietaryRestrictions?.length > 0 && (
-                        <p className="text-sm text-gray-600">Dietary: {booking.specialRequests.dietaryRestrictions.join(', ')}</p>
-                      )}
-                      {booking.specialRequests.accessibility?.length > 0 && (
-                        <p className="text-sm text-gray-600">Accessibility: {booking.specialRequests.accessibility.join(', ')}</p>
-                      )}
-                      {booking.specialRequests.additionalRequests && (
-                        <p className="text-sm text-gray-600">Additional: {booking.specialRequests.additionalRequests}</p>
-                      )}
-                    </div>
-                  )}
-                </div>
-
-                <div className="text-right">
-                  <p className="text-lg font-bold text-green-600">${booking.pricing.totalAmount}</p>
-                  <span className={`inline-block px-2 py-1 rounded-full text-xs ${booking.payment.status === 'paid' ? 'bg-green-100 text-green-800' :
-                    booking.payment.status === 'pending' ? 'bg-yellow-100 text-yellow-800' :
-                      'bg-red-100 text-red-800'
-                    }`}>
-                    {booking.payment.status}
-                  </span>
+                  <div className="text-right">
+                    <p className="text-lg font-bold text-green-600">${booking.pricing?.totalAmount || 0}</p>
+                    <span className={`inline-block px-2 py-1 rounded-full text-xs ${booking.payment?.status === 'paid' ? 'bg-green-100 text-green-800' :
+                      booking.payment?.status === 'pending' ? 'bg-yellow-100 text-yellow-800' :
+                        'bg-red-100 text-red-800'
+                      }`}>
+                      {booking.payment?.status || 'unknown'}
+                    </span>
+                  </div>
                 </div>
               </div>
+            ))
+          ) : (
+            <div className="text-center py-8">
+              <p className="text-gray-500">No bookings found.</p>
             </div>
-          ))}
+          )}
         </div>
       )}
     </div>

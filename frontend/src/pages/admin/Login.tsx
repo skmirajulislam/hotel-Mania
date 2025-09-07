@@ -31,8 +31,8 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
       const response = await authService.login(credentials);
 
       if (response.success && response.token) {
-        // Check if user has admin/staff role
-        if (response.user.role === 'admin' || response.user.role === 'manager' || response.user.role === 'staff') {
+        // Check if user has admin/staff/ceo role
+        if (['admin', 'manager', 'staff', 'ceo'].includes(response.user.role)) {
           onLogin(response.token, response.user);
           navigate('/admin-dashboard');
         } else {

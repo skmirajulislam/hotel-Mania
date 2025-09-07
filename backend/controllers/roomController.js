@@ -75,7 +75,21 @@ const getRoomById = async (req, res) => {
 // Create new room (admin only)
 const createRoom = async (req, res) => {
     try {
-        const { category, roomNumber, name, description, price, floor, amenities, services, images } = req.body;
+        const {
+            category,
+            roomNumber,
+            name,
+            description,
+            price,
+            floor,
+            amenities,
+            features,
+            services,
+            images,
+            maxOccupancy,
+            bedType,
+            roomSize
+        } = req.body;
 
         // Validate category exists
         const roomCategory = await RoomCategory.findById(category);
@@ -104,8 +118,12 @@ const createRoom = async (req, res) => {
             price: Number(price),
             floor: Number(floor),
             amenities: Array.isArray(amenities) ? amenities : [],
+            features: Array.isArray(features) ? features : [],
             services: Array.isArray(services) ? services : [],
-            images: Array.isArray(images) ? images : []
+            images: Array.isArray(images) ? images : [],
+            maxOccupancy: Number(maxOccupancy) || 2,
+            bedType: bedType || 'Queen',
+            roomSize: Number(roomSize) || 25
         });
 
         await room.save();

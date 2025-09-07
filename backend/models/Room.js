@@ -48,6 +48,29 @@ const RoomSchema = new mongoose.Schema({
     amenities: [{
         type: String
     }],
+    features: [{
+        type: String
+    }],
+    maxOccupancy: {
+        type: Number,
+        required: true,
+        default: 2,
+        min: 1,
+        max: 10
+    },
+    bedType: {
+        type: String,
+        required: true,
+        enum: ['Single', 'Double', 'Queen', 'King', 'Twin'],
+        default: 'Queen'
+    },
+    roomSize: {
+        type: Number,
+        required: true,
+        default: 25,
+        min: 10,
+        max: 200
+    },
     services: [{
         name: { type: String, required: true },
         price: { type: Number, default: 0 },

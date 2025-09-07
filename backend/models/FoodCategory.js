@@ -11,6 +11,10 @@ const FoodCategorySchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    icon: {
+        type: String,
+        default: '🍽️'
+    },
     image: {
         url: { type: String },
         cloudinaryId: { type: String }
@@ -41,8 +45,7 @@ FoodCategorySchema.virtual('totalItems', {
     count: true
 });
 
-// Index for better performance
-FoodCategorySchema.index({ name: 1 });
+// Index for better performance (name already has unique index)
 FoodCategorySchema.index({ isActive: 1, priority: -1 });
 
 module.exports = mongoose.model('FoodCategory', FoodCategorySchema);

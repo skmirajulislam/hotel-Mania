@@ -22,8 +22,7 @@ const MenuItemSchema = new mongoose.Schema({
     category: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'FoodCategory',
-        required: true,
-        index: true
+        required: true
     },
     ingredients: [{
         type: String,

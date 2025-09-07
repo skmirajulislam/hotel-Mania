@@ -15,9 +15,9 @@ router.get('/:id', employeeController.getEmployee);
 // Get salary information (restricted access)
 router.get('/:id/salary', employeeController.getSalaryInfo);
 
-// Admin/Manager only routes
-router.post('/', authorize(['admin', 'manager']), employeeController.createEmployee);
-router.put('/:id', authorize(['admin', 'manager']), employeeController.updateEmployee);
-router.delete('/:id', authorize(['admin']), employeeController.deleteEmployee); // Only admin can delete
+// Admin/Manager/CEO only routes
+router.post('/', authorize(['admin', 'manager', 'ceo']), employeeController.createEmployee);
+router.put('/:id', authorize(['admin', 'manager', 'ceo']), employeeController.updateEmployee);
+router.delete('/:id', authorize(['admin', 'ceo']), employeeController.deleteEmployee); // Only admin/CEO can delete
 
 module.exports = router;

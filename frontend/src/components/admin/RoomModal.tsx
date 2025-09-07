@@ -12,6 +12,7 @@ interface Room {
     category?: string;
     images: string[];
     features: string[];
+    amenities: string[];
     maxOccupancy: number;
     bedType: string;
     roomSize: number;
@@ -45,27 +46,30 @@ const RoomModal: React.FC<RoomModalProps> = ({
         category: '',
         images: [],
         features: [],
+        amenities: [],
         maxOccupancy: 2,
         bedType: 'Queen',
         roomSize: 25
     });
     const [loading, setLoading] = useState(false);
     const [newFeature, setNewFeature] = useState('');
+    const [newAmenity, setNewAmenity] = useState('');
     const [uploadingImages, setUploadingImages] = useState(false);
 
     useEffect(() => {
         if (room) {
             setFormData({
-                name: room.name,
-                description: room.description,
-                price: room.price,
-                availability: room.availability,
+                name: room.name || '',
+                description: room.description || '',
+                price: room.price || 0,
+                availability: room.availability || 1,
                 category: room.category || '',
                 images: room.images || [],
                 features: room.features || [],
-                maxOccupancy: room.maxOccupancy,
-                bedType: room.bedType,
-                roomSize: room.roomSize
+                amenities: room.amenities || [],
+                maxOccupancy: room.maxOccupancy || 2,
+                bedType: room.bedType || 'Queen',
+                roomSize: room.roomSize || 25
             });
         } else {
             setFormData({
@@ -76,6 +80,7 @@ const RoomModal: React.FC<RoomModalProps> = ({
                 category: '',
                 images: [],
                 features: [],
+                amenities: [],
                 maxOccupancy: 2,
                 bedType: 'Queen',
                 roomSize: 25
@@ -139,6 +144,23 @@ const RoomModal: React.FC<RoomModalProps> = ({
         setFormData(prev => ({
             ...prev,
             features: prev.features.filter((_, i) => i !== index)
+        }));
+    };
+
+    const addAmenity = () => {
+        if (newAmenity.trim()) {
+            setFormData(prev => ({
+                ...prev,
+                amenities: [...prev.amenities, newAmenity.trim()]
+            }));
+            setNewAmenity('');
+        }
+    };
+
+    const removeAmenity = (index: number) => {
+        setFormData(prev => ({
+            ...prev,
+            amenities: prev.amenities.filter((_, i) => i !== index)
         }));
     };
 
@@ -385,6 +407,47 @@ const RoomModal: React.FC<RoomModalProps> = ({
                                         type="button"
                                         onClick={() => removeFeature(index)}
                                         className="text-blue-600 hover:text-blue-800"
+                                    >
+                                        <X className="w-4 h-4" />
+                                    </button>
+                                </span>
+                            ))}
+                        </div>
+                    </div>
+
+                    {/* Amenities */}
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                            Room Amenities
+                        </label>
+                        <div className="flex gap-2 mb-2">
+                            <input
+                                type="text"
+                                value={newAmenity}
+                                onChange={(e) => setNewAmenity(e.target.value)}
+                                placeholder="Add an amenity..."
+                                className="flex-1 p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), addAmenity())}
+                            />
+                            <button
+                                type="button"
+                                onClick={addAmenity}
+                                className="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600"
+                            >
+                                Add
+                            </button>
+                        </div>
+                        <div className="flex flex-wrap gap-2">
+                            {formData.amenities.map((amenity, index) => (
+                                <span
+                                    key={index}
+                                    className="flex items-center gap-1 px-3 py-1 bg-green-100 text-green-800 rounded-full text-sm"
+                                >
+                                    {amenity}
+                                    <button
+                                        type="button"
+                                        onClick={() => removeAmenity(index)}
+                                        className="text-green-600 hover:text-green-800"
                                     >
                                         <X className="w-4 h-4" />
                                     </button>

@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { AppProviders } from './contexts/AppContext';
-import { usePerformanceMonitor } from './services/performanceMonitor.jsx';
 import Layout from './components/Layout';
 import Home from './pages/Home';
 import Rooms from './pages/Rooms';
@@ -12,7 +11,6 @@ import AuthPage from './pages/AuthPage';
 import UserDashboard from './pages/UserDashboard';
 import StaffDashboard from './pages/StaffDashboard';
 import BookRoom from './pages/BookRoom';
-import BookingForm from './pages/BookingForm';
 import EnhancedBookingForm from './pages/EnhancedBookingForm';
 import Login from './pages/admin/Login';
 import Dashboard from './pages/admin/Dashboard';
@@ -28,9 +26,6 @@ interface User {
 const AppContent: React.FC = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [user, setUser] = useState<User | null>(null);
-
-  // Initialize performance monitoring
-  usePerformanceMonitor();
 
   useEffect(() => {
     // Check for authentication token and user data
@@ -69,6 +64,8 @@ const AppContent: React.FC = () => {
     localStorage.removeItem('user');
     setUser(null);
     setIsAuthenticated(false);
+    // Redirect to admin login page after logout
+    window.location.href = '/admin';
   };
 
   // Get role-based dashboard route
@@ -76,6 +73,7 @@ const AppContent: React.FC = () => {
     switch (role) {
       case 'admin':
       case 'manager':
+      case 'ceo':
         return '/admin-dashboard';
       case 'staff':
         return '/staff-dashboard';
@@ -178,7 +176,7 @@ const AppContent: React.FC = () => {
 
         {/* Admin Dashboard */}
         <Route path="/admin-dashboard" element={
-          <ProtectedRoute allowedRoles={['admin', 'manager']}>
+          <ProtectedRoute allowedRoles={['admin', 'manager', 'ceo']}>
             <Dashboard onLogout={handleLogout} />
           </ProtectedRoute>
         } />
@@ -188,13 +186,6 @@ const AppContent: React.FC = () => {
           <ProtectedRoute allowedRoles={['ceo']}>
             <Dashboard onLogout={handleLogout} />
           </ProtectedRoute>
-        } />
-
-        {/* Legacy booking route */}
-        <Route path="/booking-form/:roomId" element={
-          <Layout>
-            <BookingForm />
-          </Layout>
         } />
 
         {/* Legacy Admin Routes */}

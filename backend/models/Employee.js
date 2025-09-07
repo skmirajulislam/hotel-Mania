@@ -88,8 +88,7 @@ EmployeeSchema.virtual('employmentDuration').get(function () {
     return diffDays;
 });
 
-// Indexes
-EmployeeSchema.index({ user: 1 });
+// Indexes (user already has unique index)
 EmployeeSchema.index({ isActive: 1 });
 EmployeeSchema.index({ 'salary.base': 1 });
 

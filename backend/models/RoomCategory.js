@@ -63,8 +63,7 @@ RoomCategorySchema.virtual('availableRooms').get(function () {
     return this._availableRooms || 0;
 });
 
-// Index for better performance
-RoomCategorySchema.index({ name: 1 });
+// Index for better performance (name already has unique index)
 RoomCategorySchema.index({ isActive: 1, priority: -1 });
 
 module.exports = mongoose.model('RoomCategory', RoomCategorySchema);

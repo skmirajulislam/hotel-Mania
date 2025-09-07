@@ -403,6 +403,46 @@ export const foodCategoriesService = {
     }
 };
 
+// Room Categories service
+export const roomCategoriesService = {
+    getAllCategories: async () => {
+        try {
+            const response = await api.get('/api/room-categories');
+            return response.data.data || [];
+        } catch (error) {
+            handleApiError(error, 'roomCategories.getAllCategories');
+            return [];
+        }
+    },
+
+    createCategory: async (categoryData) => {
+        try {
+            const response = await api.post('/api/room-categories', categoryData);
+            return response.data;
+        } catch (error) {
+            handleApiError(error, 'roomCategories.createCategory');
+        }
+    },
+
+    updateCategory: async (id, categoryData) => {
+        try {
+            const response = await api.put(`/api/room-categories/${id}`, categoryData);
+            return response.data;
+        } catch (error) {
+            handleApiError(error, 'roomCategories.updateCategory');
+        }
+    },
+
+    deleteCategory: async (id) => {
+        try {
+            const response = await api.delete(`/api/room-categories/${id}`);
+            return response.data;
+        } catch (error) {
+            handleApiError(error, 'roomCategories.deleteCategory');
+        }
+    }
+};
+
 // Enhanced Gallery service
 export const galleryService = {
     getAllGalleryItems: async () => {
