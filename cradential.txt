@@ -1,0 +1,19 @@
+login credential: 
+
+Staff Account:
+Email: staff@grandhotel.com
+Password: staff123
+Role: Staff
+Access: Staff Dashboard with limited permissions
+
+Owner Account:
+Email: owner@grandhotel.com
+Password: owner123
+Role: CEO
+Access: Full Admin Dashboard with complete access
+
+Email: manager@grandhotel.com, Role: manager, Name: Manager User
+password:  manager123
+
+Email: admin@grandhotel.com, Role: admin, Name: Admin User
+password: admin123

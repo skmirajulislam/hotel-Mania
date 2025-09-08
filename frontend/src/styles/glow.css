@@ -1,0 +1,68 @@
+/* Custom dark mode glow effects */
+@layer utilities {
+    .glow-text {
+        text-shadow: 0 0 8px rgba(255, 255, 255, 0.8), 0 0 16px rgba(255, 255, 255, 0.6), 0 0 24px rgba(255, 255, 255, 0.4);
+    }
+
+    .glow-text-strong {
+        text-shadow: 0 0 10px rgba(255, 255, 255, 1), 0 0 20px rgba(255, 255, 255, 0.8), 0 0 30px rgba(255, 255, 255, 0.6);
+    }
+
+    .glow-border {
+        box-shadow: 0 0 5px currentColor, 0 0 10px currentColor, 0 0 15px currentColor;
+    }
+
+    .glow-card {
+        box-shadow: 0 0 15px rgba(255, 255, 255, 0.2), 0 0 30px rgba(255, 255, 255, 0.15), 0 0 45px rgba(255, 255, 255, 0.1);
+    }
+
+    .glow-blue {
+        box-shadow: 0 0 15px rgba(59, 130, 246, 0.6), 0 0 30px rgba(59, 130, 246, 0.4), 0 0 45px rgba(59, 130, 246, 0.2);
+    }
+
+    .glow-green {
+        box-shadow: 0 0 15px rgba(34, 197, 94, 0.6), 0 0 30px rgba(34, 197, 94, 0.4), 0 0 45px rgba(34, 197, 94, 0.2);
+    }
+
+    .glow-purple {
+        box-shadow: 0 0 15px rgba(168, 85, 247, 0.6), 0 0 30px rgba(168, 85, 247, 0.4), 0 0 45px rgba(168, 85, 247, 0.2);
+    }
+
+    .glow-orange {
+        box-shadow: 0 0 15px rgba(249, 115, 22, 0.6), 0 0 30px rgba(249, 115, 22, 0.4), 0 0 45px rgba(249, 115, 22, 0.2);
+    }
+
+    /* Enhanced text colors for dark mode */
+    .dark .text-auto {
+        color: white !important;
+        text-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
+    }
+
+    .dark .text-auto-glow {
+        color: white !important;
+        text-shadow: 0 0 8px rgba(255, 255, 255, 0.8), 0 0 16px rgba(255, 255, 255, 0.6);
+    }
+
+    .light .text-auto {
+        color: #374151 !important;
+    }
+
+    .light .text-auto-glow {
+        color: #374151 !important;
+    }
+}
+
+/* Enhanced dark mode animations */
+.dark .animate-glow {
+    animation: glow 2s ease-in-out infinite alternate;
+}
+
+@keyframes glow {
+    from {
+        box-shadow: 0 0 5px rgba(255, 255, 255, 0.2), 0 0 10px rgba(255, 255, 255, 0.2), 0 0 15px rgba(255, 255, 255, 0.2);
+    }
+
+    to {
+        box-shadow: 0 0 10px rgba(255, 255, 255, 0.4), 0 0 20px rgba(255, 255, 255, 0.4), 0 0 30px rgba(255, 255, 255, 0.4);
+    }
+}
