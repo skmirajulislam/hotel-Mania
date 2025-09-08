@@ -18,7 +18,7 @@ interface FoodCategory {
     isActive: boolean;
 }
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5002/api';
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5002';
 
 const MenuManagement: React.FC = () => {
     const [menuItems, setMenuItems] = useState<MenuItem[]>([]);
@@ -39,14 +39,14 @@ const MenuManagement: React.FC = () => {
             };
 
             // Fetch menu items
-            const menuResponse = await fetch(`${API_BASE_URL}/menu`, { headers });
+            const menuResponse = await fetch(`${API_BASE_URL}/api/menu`, { headers });
             if (menuResponse.ok) {
                 const menuData = await menuResponse.json();
                 setMenuItems(menuData.data || []);
             }
 
             // Fetch food categories
-            const categoriesResponse = await fetch(`${API_BASE_URL}/food-categories`, { headers });
+            const categoriesResponse = await fetch(`${API_BASE_URL}/api/food-categories`, { headers });
             if (categoriesResponse.ok) {
                 const categoriesData = await categoriesResponse.json();
                 setFoodCategories(categoriesData.data || []);
@@ -89,12 +89,12 @@ const MenuManagement: React.FC = () => {
 
             {/* Food Categories Section */}
             <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
-                <h3 className="text-xl font-semibold text-gray-900 dark:text-white dark:glow-text-strong mb-6">Food Categories</h3>
+                <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-6">Food Categories</h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     {foodCategories.map((category) => (
                         <div key={category._id} className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4 hover:shadow-lg transition-shadow">
                             <div className="flex justify-between items-start mb-3">
-                                <h4 className="font-semibold text-gray-900 dark:text-white dark:glow-text-strong">{category.name}</h4>
+                                <h4 className="font-semibold text-gray-900 dark:text-white">{category.name}</h4>
                                 <div className="flex space-x-2">
                                     <button className="bg-blue-500 text-white p-1 rounded hover:bg-blue-600">
                                         <Edit className="h-4 w-4" />
@@ -104,7 +104,7 @@ const MenuManagement: React.FC = () => {
                                     </button>
                                 </div>
                             </div>
-                            <p className="text-sm text-gray-600 dark:text-gray-300 dark:glow-text mb-3">{category.description}</p>
+                            <p className="text-sm text-gray-600 dark:text-gray-300 mb-3">{category.description}</p>
                             <div className="flex justify-between items-center text-sm">
                                 <span className={`px-2 py-1 rounded-full text-xs ${category.isActive ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>
                                     {category.isActive ? 'Active' : 'Inactive'}
@@ -117,21 +117,21 @@ const MenuManagement: React.FC = () => {
 
                 {foodCategories.length === 0 && (
                     <div className="text-center py-8">
-                        <p className="text-gray-500 dark:text-gray-400 dark:glow-text">Menu management interface coming soon... You can currently view and manage menu items below.</p>
+                        <p className="text-gray-500 dark:text-gray-400">Menu management interface coming soon... You can currently view and manage menu items below.</p>
                     </div>
                 )}
             </div>
 
             {/* Menu Items Section */}
             <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
-                <h3 className="text-xl font-semibold text-gray-900 dark:text-white dark:glow-text-strong mb-6">Menu Items</h3>
+                <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-6">Menu Items</h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     {menuItems.map((item) => (
                         <div key={item._id} className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4 hover:shadow-lg transition-shadow">
                             <div className="flex justify-between items-start mb-3">
                                 <div className="flex-1">
-                                    <h4 className="font-semibold text-gray-900 dark:text-white dark:glow-text-strong">{item.name}</h4>
-                                    <p className="text-sm text-orange-600 dark:text-orange-400 dark:glow-text">Menu Category</p>
+                                    <h4 className="font-semibold text-gray-900 dark:text-white">{item.name}</h4>
+                                    <p className="text-sm text-orange-600 dark:text-orange-400">Menu Category</p>
                                 </div>
                                 <div className="flex space-x-2">
                                     <button className="bg-blue-500 text-white p-1 rounded hover:bg-blue-600">
@@ -142,9 +142,9 @@ const MenuManagement: React.FC = () => {
                                     </button>
                                 </div>
                             </div>
-                            <p className="text-sm text-gray-600 dark:text-gray-300 dark:glow-text mb-3 line-clamp-2">{item.description}</p>
+                            <p className="text-sm text-gray-600 dark:text-gray-300 mb-3 line-clamp-2">{item.description}</p>
                             <div className="flex justify-between items-center">
-                                <span className="font-bold text-lg text-gray-900 dark:text-white dark:glow-text-strong">${item.price}</span>
+                                <span className="font-bold text-lg text-gray-900 dark:text-white">${item.price}</span>
                                 <div className="flex items-center space-x-2">
                                     <span className="text-xs text-gray-500 dark:text-gray-400">min</span>
                                     <span className={`px-2 py-1 rounded-full text-xs ${item.isAvailable ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>
@@ -159,8 +159,8 @@ const MenuManagement: React.FC = () => {
                 {menuItems.length === 0 && (
                     <div className="text-center py-8">
                         <div className="text-6xl mb-4">🍽️</div>
-                        <h4 className="text-lg font-medium text-gray-900 dark:text-white dark:glow-text-strong mb-2">No menu items found</h4>
-                        <p className="text-gray-600 dark:text-gray-300 dark:glow-text">Get started by adding your first menu item.</p>
+                        <h4 className="text-lg font-medium text-gray-900 dark:text-white mb-2">No menu items found</h4>
+                        <p className="text-gray-600 dark:text-gray-300">Get started by adding your first menu item.</p>
                     </div>
                 )}
             </div>

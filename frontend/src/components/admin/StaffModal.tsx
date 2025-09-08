@@ -91,7 +91,7 @@ const StaffModal: React.FC<StaffModalProps> = ({ isOpen, onClose, onStaffCreated
         setLoading(true);
         try {
             const token = localStorage.getItem('token');
-            const response = await fetch(`${import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000'}/api/auth/register`, {
+            const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:5002'}/api/auth/register`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -142,8 +142,8 @@ const StaffModal: React.FC<StaffModalProps> = ({ isOpen, onClose, onStaffCreated
                 {/* Header */}
                 <div className="sticky top-0 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700 px-4 md:px-6 py-4 flex justify-between items-center">
                     <div>
-                        <h2 className="text-2xl font-bold text-gray-900 dark:text-white dark:glow-text">Add New Staff Member</h2>
-                        <p className="text-gray-600 dark:text-gray-300 dark:glow-text mt-1">Create a new staff account</p>
+                        <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Add New Staff Member</h2>
+                        <p className="text-gray-600 dark:text-gray-300 mt-1">Create a new staff account</p>
                     </div>
                     <button
                         onClick={onClose}
@@ -158,7 +158,7 @@ const StaffModal: React.FC<StaffModalProps> = ({ isOpen, onClose, onStaffCreated
                     {/* Personal Information */}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 dark:glow-text mb-2">
+                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                                 <User className="h-4 w-4 inline mr-1" />
                                 First Name *
                             </label>
@@ -175,7 +175,7 @@ const StaffModal: React.FC<StaffModalProps> = ({ isOpen, onClose, onStaffCreated
                         </div>
 
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 dark:glow-text mb-2">
+                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                                 <User className="h-4 w-4 inline mr-1" />
                                 Last Name *
                             </label>
@@ -192,7 +192,7 @@ const StaffModal: React.FC<StaffModalProps> = ({ isOpen, onClose, onStaffCreated
                         </div>
 
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 dark:glow-text mb-2">
+                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                                 <Mail className="h-4 w-4 inline mr-1" />
                                 Email *
                             </label>
@@ -209,7 +209,7 @@ const StaffModal: React.FC<StaffModalProps> = ({ isOpen, onClose, onStaffCreated
                         </div>
 
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 dark:glow-text mb-2">
+                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                                 <Phone className="h-4 w-4 inline mr-1" />
                                 Phone *
                             </label>
@@ -226,7 +226,7 @@ const StaffModal: React.FC<StaffModalProps> = ({ isOpen, onClose, onStaffCreated
                         </div>
 
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 dark:glow-text mb-2">
+                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                                 <Lock className="h-4 w-4 inline mr-1" />
                                 Password *
                             </label>
@@ -243,7 +243,7 @@ const StaffModal: React.FC<StaffModalProps> = ({ isOpen, onClose, onStaffCreated
                         </div>
 
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 dark:glow-text mb-2">
+                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                                 Gender *
                             </label>
                             <select
@@ -262,7 +262,7 @@ const StaffModal: React.FC<StaffModalProps> = ({ isOpen, onClose, onStaffCreated
                         </div>
 
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 dark:glow-text mb-2">
+                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                                 <Calendar className="h-4 w-4 inline mr-1" />
                                 Date of Birth
                             </label>
@@ -276,7 +276,7 @@ const StaffModal: React.FC<StaffModalProps> = ({ isOpen, onClose, onStaffCreated
                         </div>
 
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 dark:glow-text mb-2">
+                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                                 Role
                             </label>
                             <select
@@ -292,7 +292,7 @@ const StaffModal: React.FC<StaffModalProps> = ({ isOpen, onClose, onStaffCreated
                         </div>
 
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 dark:glow-text mb-2">
+                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                                 Department
                             </label>
                             <select
@@ -308,7 +308,7 @@ const StaffModal: React.FC<StaffModalProps> = ({ isOpen, onClose, onStaffCreated
                         </div>
 
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 dark:glow-text mb-2">
+                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                                 <Calendar className="h-4 w-4 inline mr-1" />
                                 Start Date
                             </label>
@@ -324,7 +324,7 @@ const StaffModal: React.FC<StaffModalProps> = ({ isOpen, onClose, onStaffCreated
 
                     {/* Address */}
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 dark:glow-text mb-2">
+                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                             <MapPin className="h-4 w-4 inline mr-1" />
                             Address *
                         </label>
@@ -352,7 +352,7 @@ const StaffModal: React.FC<StaffModalProps> = ({ isOpen, onClose, onStaffCreated
                         <button
                             type="submit"
                             disabled={loading}
-                            className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 disabled:opacity-50 flex items-center gap-2 dark:glow-blue"
+                            className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 disabled:opacity-50 flex items-center gap-2"
                         >
                             {loading ? <LoadingSpinner /> : null}
                             {loading ? 'Creating...' : 'Create Staff Member'}

@@ -10,7 +10,7 @@ import MenuManagement from '../../components/admin/MenuManagement';
 import ThemeSwitcher from '../../components/ThemeSwitcher';
 import StaffModal from '../../components/admin/StaffModal';
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5002/api';
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5002';
 
 interface Room {
   _id: string;
@@ -527,7 +527,7 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout }) => {
 
     return (
       <div className="space-y-6">
-        <h2 className="text-2xl font-bold mb-6 dark:text-white dark:glow-text-strong">Dashboard Overview</h2>
+        <h2 className="text-2xl font-bold mb-6 dark:text-white">Dashboard Overview</h2>
 
         {/* Stats Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
@@ -617,7 +617,7 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout }) => {
   const renderBookingsTab = () => (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
-        <h2 className="text-2xl font-bold dark:text-white dark:glow-text-strong">Bookings Management</h2>
+        <h2 className="text-2xl font-bold dark:text-white">Bookings Management</h2>
         <div className="flex gap-2">
           <button
             onClick={() => setActiveTab('overview')}
@@ -702,7 +702,7 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout }) => {
   const renderUsersTab = () => (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
-        <h2 className="text-2xl font-bold dark:text-white dark:glow-text-strong">Employee Management</h2>
+        <h2 className="text-2xl font-bold dark:text-white">Employee Management</h2>
         <div className="flex gap-2">
           <button
             onClick={() => setActiveTab('overview')}
@@ -867,7 +867,7 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout }) => {
 
       {/* Individual Rooms */}
       <div>
-        <h3 className="text-xl font-semibold mb-4 dark:text-white dark:glow-text-strong">Individual Rooms</h3>
+        <h3 className="text-xl font-semibold mb-4 dark:text-white">Individual Rooms</h3>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {rooms.map((room) => (
             <div key={room._id} className="bg-white rounded-lg shadow p-4">
@@ -919,7 +919,7 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout }) => {
   const renderSettingsTab = () => (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
-        <h2 className="text-2xl font-bold dark:text-white dark:glow-text-strong">Settings</h2>
+        <h2 className="text-2xl font-bold dark:text-white">Settings</h2>
         <button
           onClick={() => setActiveTab('overview')}
           className="bg-gray-600 text-white px-4 py-2 rounded-lg hover:bg-gray-700 flex items-center gap-2"
@@ -1046,7 +1046,7 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout }) => {
       <header className="bg-white dark:bg-gray-800 shadow-sm border-b dark:border-gray-700">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
-            <h1 className="text-xl font-semibold text-gray-900 dark:text-white dark:glow-text-strong">Admin Dashboard</h1>
+            <h1 className="text-xl font-semibold text-gray-900 dark:text-white">Admin Dashboard</h1>
 
             <div className="flex items-center space-x-4">
               {/* Theme Switcher */}
@@ -1060,7 +1060,7 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout }) => {
                   </span>
                 </div>
                 <div className="hidden md:block">
-                  <div className="text-sm font-medium text-gray-900 dark:text-white dark:glow-text">
+                  <div className="text-sm font-medium text-gray-900 dark:text-white">
                     {currentUser?.firstName} {currentUser?.lastName}
                   </div>
                   <div className="text-xs text-gray-500 dark:text-gray-300 uppercase">
