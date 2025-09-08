@@ -1,9 +1,9 @@
+/* Import custom glow styles */
+@import './styles/glow.css';
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
-/* Import custom glow styles */
-@import './styles/glow.css';
 
 /* Custom animations */
 @keyframes fade-in {

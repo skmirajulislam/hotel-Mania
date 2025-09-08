@@ -58,11 +58,6 @@ const MenuManagement: React.FC = () => {
         }
     };
 
-    const getCategoryName = (categoryId: string) => {
-        const category = foodCategories.find(cat => cat._id === categoryId);
-        return category ? category.name : 'Uncategorized';
-    };
-
     if (loading) {
         return (
             <div className="flex items-center justify-center h-64">
@@ -75,7 +70,7 @@ const MenuManagement: React.FC = () => {
         <div className="space-y-6">
             {/* Header */}
             <div className="flex justify-between items-center">
-                <h2 className="text-2xl font-bold text-gray-900 dark:text-white dark:glow-text-strong">Restaurant Management</h2>
+                <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Restaurant Management</h2>
                 <div className="flex space-x-4">
                     <button className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 flex items-center space-x-2">
                         <span>🏠</span>
@@ -170,8 +165,6 @@ const MenuManagement: React.FC = () => {
                 )}
             </div>
         </div>
-    );
-        </div >
     );
 };
 
