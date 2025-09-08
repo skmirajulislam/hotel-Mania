@@ -1,6 +1,8 @@
 import React, { useState, ChangeEvent, useRef, DragEvent } from 'react';
 import { Upload, X, AlertCircle } from 'lucide-react';
 
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5002';
+
 interface FileUploadProps {
   onFileUpload: (fileUrl: string) => void;
   currentImage?: string;
@@ -9,8 +11,6 @@ interface FileUploadProps {
   fileType?: 'image' | 'video';
   maxSizeMB?: number;
 }
-
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5002';
 
 const FileUpload: React.FC<FileUploadProps> = ({
   onFileUpload,

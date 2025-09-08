@@ -11,6 +11,8 @@ import {
     MessageSquare
 } from 'lucide-react';
 
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5002';
+
 interface ServiceRequest {
     _id: string;
     type: string;
@@ -37,8 +39,6 @@ interface User {
     role: string;
     department?: string;
 }
-
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5002';
 
 const StaffDashboard: React.FC = () => {
     const [activeTab, setActiveTab] = useState('tasks');

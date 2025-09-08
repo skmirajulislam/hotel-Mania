@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Users, Package, Check, ArrowLeft } from 'lucide-react';
 
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5002';
+
 interface Room {
     _id: string;
     number: string;
@@ -34,8 +36,6 @@ interface Service {
     duration: number;
     available: boolean;
 }
-
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5002';
 
 const BookRoom: React.FC = () => {
     const [step, setStep] = useState(1);
