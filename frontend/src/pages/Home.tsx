@@ -19,7 +19,7 @@ const Home: React.FC = () => {
   useEffect(() => {
     const fetchTestimonials = async () => {
       try {
-        const response = await fetch(`${API_BASE_URL}/testimonials`);
+        const response = await fetch(`${API_BASE_URL}/api/testimonials`);
         if (response.ok) {
           const data = await response.json();
           setTestimonials(data.slice(0, 3)); // Show only 3 testimonials

@@ -35,6 +35,8 @@ interface Service {
     available: boolean;
 }
 
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5002';
+
 const BookRoom: React.FC = () => {
     const [step, setStep] = useState(1);
     const [rooms, setRooms] = useState<Room[]>([]);
@@ -68,21 +70,21 @@ const BookRoom: React.FC = () => {
             };
 
             // Fetch rooms
-            const roomsResponse = await fetch('/api/rooms', { headers });
+            const roomsResponse = await fetch(`${API_BASE_URL}/api/rooms`, { headers });
             if (roomsResponse.ok) {
                 const roomsData = await roomsResponse.json();
                 setRooms(roomsData.data || []);
             }
 
             // Fetch packages
-            const packagesResponse = await fetch('/api/packages', { headers });
+            const packagesResponse = await fetch(`${API_BASE_URL}/api/packages`, { headers });
             if (packagesResponse.ok) {
                 const packagesData = await packagesResponse.json();
                 setPackages(packagesData.data || []);
             }
 
             // Fetch services
-            const servicesResponse = await fetch('/api/services', { headers });
+            const servicesResponse = await fetch(`${API_BASE_URL}/api/services`, { headers });
             if (servicesResponse.ok) {
                 const servicesData = await servicesResponse.json();
                 setServices(servicesData.data || []);
@@ -149,7 +151,7 @@ const BookRoom: React.FC = () => {
         setLoading(true);
         try {
             const token = localStorage.getItem('token');
-            const response = await fetch('/api/bookings', {
+            const response = await fetch(`${API_BASE_URL}/api/bookings`, {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${token}`,
@@ -386,8 +388,8 @@ const BookRoom: React.FC = () => {
                                     <div
                                         key={pkg._id}
                                         className={`border rounded-lg p-4 cursor-pointer transition-colors ${bookingData.selectedPackages.some(p => p._id === pkg._id)
-                                                ? 'border-yellow-500 bg-yellow-50'
-                                                : 'border-gray-200 hover:border-gray-300'
+                                            ? 'border-yellow-500 bg-yellow-50'
+                                            : 'border-gray-200 hover:border-gray-300'
                                             }`}
                                         onClick={() => togglePackage(pkg)}
                                     >
@@ -416,8 +418,8 @@ const BookRoom: React.FC = () => {
                                     <div
                                         key={service._id}
                                         className={`border rounded-lg p-4 cursor-pointer transition-colors ${bookingData.selectedServices.some(s => s._id === service._id)
-                                                ? 'border-yellow-500 bg-yellow-50'
-                                                : 'border-gray-200 hover:border-gray-300'
+                                            ? 'border-yellow-500 bg-yellow-50'
+                                            : 'border-gray-200 hover:border-gray-300'
                                             }`}
                                         onClick={() => toggleService(service)}
                                     >

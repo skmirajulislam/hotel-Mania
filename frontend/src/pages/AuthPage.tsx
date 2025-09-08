@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { Eye, EyeOff, UserPlus, LogIn } from 'lucide-react';
 
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5002';
+
 const AuthPage: React.FC = () => {
     const [isLogin, setIsLogin] = useState(true);
     const [showPassword, setShowPassword] = useState(false);
@@ -64,7 +66,7 @@ const AuthPage: React.FC = () => {
         setError('');
 
         try {
-            const response = await fetch('/api/auth/login', {
+            const response = await fetch(`${API_BASE_URL}/api/auth/login`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -125,7 +127,7 @@ const AuthPage: React.FC = () => {
         }
 
         try {
-            const response = await fetch('/api/auth/register', {
+            const response = await fetch(`${API_BASE_URL}/api/auth/register`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -176,8 +178,8 @@ const AuthPage: React.FC = () => {
                             type="button"
                             onClick={() => setIsLogin(true)}
                             className={`flex-1 py-2 px-4 rounded-md text-sm font-medium transition-colors ${isLogin
-                                    ? 'bg-white text-yellow-600 shadow'
-                                    : 'text-gray-500 hover:text-gray-700'
+                                ? 'bg-white text-yellow-600 shadow'
+                                : 'text-gray-500 hover:text-gray-700'
                                 }`}
                         >
                             <LogIn className="h-4 w-4 inline mr-1" />
@@ -187,8 +189,8 @@ const AuthPage: React.FC = () => {
                             type="button"
                             onClick={() => setIsLogin(false)}
                             className={`flex-1 py-2 px-4 rounded-md text-sm font-medium transition-colors ${!isLogin
-                                    ? 'bg-white text-yellow-600 shadow'
-                                    : 'text-gray-500 hover:text-gray-700'
+                                ? 'bg-white text-yellow-600 shadow'
+                                : 'text-gray-500 hover:text-gray-700'
                                 }`}
                         >
                             <UserPlus className="h-4 w-4 inline mr-1" />

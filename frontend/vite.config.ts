@@ -34,7 +34,7 @@ export default defineConfig({
     host: true,
     proxy: {
       '/api': {
-        target: 'https://hotel-mania-mu.vercel.app',
+        target: 'https://mania-backend-production.up.railway.app',
         changeOrigin: true,
         secure: false
       },

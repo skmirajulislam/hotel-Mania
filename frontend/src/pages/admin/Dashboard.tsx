@@ -247,7 +247,7 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout }) => {
         return;
       }
 
-      const response = await fetch(`${API_BASE_URL}/auth/me`, {
+      const response = await fetch(`${API_BASE_URL}/api/auth/me`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
@@ -322,11 +322,11 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout }) => {
         bookingsResponse,
         roomCategoriesResponse
       ] = await Promise.all([
-        fetchWithRetry(`${API_BASE_URL}/rooms`),
-        fetchWithRetry(`${API_BASE_URL}/menu`),
-        fetchWithRetry(`${API_BASE_URL}/employees`),
-        fetchWithRetry(`${API_BASE_URL}/bookings`),
-        fetchWithRetry(`${API_BASE_URL}/room-categories`)
+        fetchWithRetry(`${API_BASE_URL}/api/rooms`),
+        fetchWithRetry(`${API_BASE_URL}/api/menu`),
+        fetchWithRetry(`${API_BASE_URL}/api/employees`),
+        fetchWithRetry(`${API_BASE_URL}/api/bookings`),
+        fetchWithRetry(`${API_BASE_URL}/api/room-categories`)
       ]);
 
       if (roomsResponse?.ok) {
@@ -367,7 +367,7 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout }) => {
     setConfirmAction(() => async () => {
       try {
         const token = localStorage.getItem('token');
-        const response = await fetch(`${API_BASE_URL}/auth/update-profile`, {
+        const response = await fetch(`${API_BASE_URL}/api/auth/update-profile`, {
           method: 'PUT',
           headers: {
             'Authorization': `Bearer ${token}`,
@@ -403,7 +403,7 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout }) => {
               type === 'room-category' ? 'room-categories' :
                 type === 'food-category' ? 'food-categories' : '';
 
-        const response = await fetch(`${API_BASE_URL}/${endpoint}/${id}`, {
+        const response = await fetch(`${API_BASE_URL}/api/${endpoint}/${id}`, {
           method: 'DELETE',
           headers: {
             'Authorization': `Bearer ${token}`
@@ -431,8 +431,8 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout }) => {
     try {
       const token = localStorage.getItem('token');
       const url = editingRoom
-        ? `${API_BASE_URL}/rooms/${editingRoom._id}`
-        : `${API_BASE_URL}/rooms`;
+        ? `${API_BASE_URL}/api/rooms/${editingRoom._id}`
+        : `${API_BASE_URL}/api/rooms`;
 
       const response = await fetch(url, {
         method: editingRoom ? 'PUT' : 'POST',
@@ -461,8 +461,8 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout }) => {
     try {
       const token = localStorage.getItem('token');
       const url = editingRoomCategory
-        ? `${API_BASE_URL}/room-categories/${editingRoomCategory._id}`
-        : `${API_BASE_URL}/room-categories`;
+        ? `${API_BASE_URL}/api/room-categories/${editingRoomCategory._id}`
+        : `${API_BASE_URL}/api/room-categories`;
 
       const response = await fetch(url, {
         method: editingRoomCategory ? 'PUT' : 'POST',
@@ -491,8 +491,8 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout }) => {
     try {
       const token = localStorage.getItem('token');
       const url = editingFoodCategory
-        ? `${API_BASE_URL}/food-categories/${editingFoodCategory._id}`
-        : `${API_BASE_URL}/food-categories`;
+        ? `${API_BASE_URL}/api/food-categories/${editingFoodCategory._id}`
+        : `${API_BASE_URL}/api/food-categories`;
 
       const response = await fetch(url, {
         method: editingFoodCategory ? 'PUT' : 'POST',

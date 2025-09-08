@@ -10,6 +10,8 @@ interface FileUploadProps {
   maxSizeMB?: number;
 }
 
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5002';
+
 const FileUpload: React.FC<FileUploadProps> = ({
   onFileUpload,
   currentImage,
@@ -69,7 +71,7 @@ const FileUpload: React.FC<FileUploadProps> = ({
       const formData = new FormData();
       formData.append('file', file);
 
-      const response = await fetch('/api/utils/upload-public', {
+      const response = await fetch(`${API_BASE_URL}/api/utils/upload-public`, {
         method: 'POST',
         body: formData,
       });
